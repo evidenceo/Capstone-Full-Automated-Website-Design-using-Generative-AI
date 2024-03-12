@@ -1,0 +1,70 @@
+/* MAIN.HTML */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.chat-container {
+    width: 30%; /* Adjust width as needed */
+    background: #f2f2f2;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.chat-input-container {
+    display: flex;
+}
+
+.chat-input-container input {
+    flex-grow: 1;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+.chat-input-container button {
+    padding: 10px;
+}
+
+.preview-container {
+    flex-grow: 1;
+    position: relative;
+}
+
+.preview-header {
+    /* Style for preview header */
+}
+
+#previewFrame {
+    width: 100%;
+    height: calc(100% - 60px); /* Adjust height based on header/footer size */
+    border: none;
+}
+
+#reloadBtn, #launchBtn {
+    position: absolute;
+    bottom: 20px; /* Adjust positioning as needed */
+}
+
+#reloadBtn {
+    left: 20px;
+}
+
+#launchBtn {
+    right: 20px;
+}
+
+/* Add further styling for buttons, chat box, etc. */

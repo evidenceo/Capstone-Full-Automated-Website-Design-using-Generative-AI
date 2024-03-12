@@ -1,0 +1,49 @@
+<!--This is a html about us  page template for any ecommerce website-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ECommerce </title>
+    <!-- Dynamically link to the CSS file -->
+    <link rel="stylesheet" href="/template_content/css/1/Contact">
+</head>
+<body>
+<header>
+    <h1>{{ Business_name }}</h1>
+    <!--helps to identify the website being visited-->
+
+    <nav>
+        <!--navigation bar containing links to different pages-->
+         <ul>
+            <li><a href="#" onclick="navigateTo('Home')">Home</a></li>
+            <li><a href="#" onclick="navigateTo('About')">About Us</a></li>
+            <li><a href="#" onclick="navigateTo('Products')">Products</a></li>
+            <li><a href="#" onclick="navigateTo('Contact')">Contact Us</a></li>
+        </ul>
+    </nav>
+</header>
+<!-- Contact Us Page -->
+<section id="contact">
+    <h2>Contact Us</h2>
+    <!--This includes the contact information of the business such as social media platforms, email, offices-->
+    <p>{{ contact_us_content }}</p>
+
+    <!--A form users can fill with their name, email and message to the business-->
+    <form action="{{ form_action }}" method="post">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message"></textarea><br>
+        <input type="submit" value="Submit">
+    </form>
+</section>
+</main>
+<footer>
+    <p>{{ footer_content }}</p>
+</footer>
+<!-- Dynamically link to the JS file -->
+<script src="/template_content/js/1/Contact"></script>
+</body>
+</html>

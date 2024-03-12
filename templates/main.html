@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="static/main_styles.css">
+   <script type="text/javascript">
+        var initialPageName = 'Home';  // 'Home' is the initial page
+        var templateId = {{ template_id | tojson }};  // Ensure this is correctly obtained
+        var templateContentUrl = `/template_content/${templateId}/${initialPageName}`;
+   </script>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-history" id="chatHistory">
+                <!-- Chat messages will be appended here -->
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" placeholder="Type here...">
+                <button id="sendBtn">Send</button>
+            </div>
+        </div>
+        <div class="preview-container">
+            <div class="preview-header">
+                <!-- Navigation buttons or tabs could go here -->
+            </div>
+            <iframe id="previewFrame" src="about:blank"></iframe>
+            <button id="reloadBtn" onclick="reloadPreview()">↻</button>
+            <button id="launchBtn">LAUNCH</button>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>

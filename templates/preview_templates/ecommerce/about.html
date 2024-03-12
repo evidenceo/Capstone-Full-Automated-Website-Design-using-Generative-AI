@@ -1,0 +1,39 @@
+<!--This is a html about us  page template for any ecommerce website-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ecommerce</title>
+    <!-- Dynamically link to the CSS file -->
+    <link rel="stylesheet" href="/template_content/css/1/About">
+</head>
+<body>
+<header>
+    <h1>{{ Business_name }}</h1>
+    <!--helps to identify the website being visited-->
+
+    <nav>
+        <!--navigation bar containing links to different pages-->
+         <ul>
+            <li><a href="#" onclick="navigateTo('Home')">Home</a></li>
+            <li><a href="#" onclick="navigateTo('About')">About Us</a></li>
+            <li><a href="#" onclick="navigateTo('Products')">Products</a></li>
+            <li><a href="#" onclick="navigateTo('Contact')">Contact Us</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <!-- About Us Page -->
+    <!--Include content such as business description, history, mission and team or employees-->
+    <section id="about">
+        <h2>About Us</h2>
+        <p>{{ about_us_content }}</p>
+    </section>
+</main>
+<footer>
+    <p>{{ footer_content }}</p>
+</footer>
+<!-- Dynamically link to the JS file -->
+<script src="/template_content/js/1/About"></script>
+</body>
+</html>

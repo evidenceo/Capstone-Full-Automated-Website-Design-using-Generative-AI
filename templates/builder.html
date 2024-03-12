@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Builder</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="builder-container">
+        <div id="question" onclick="toggleOptions()">
+            <p>What kind of website do you want to create?</p>
+            <span class="arrow">&#9660;</span> <!-- Downward arrow -->
+        </div>
+        <div id="options" class="hidden">
+            <button onclick="redirectToMain('business')">Business and Corporate</button>
+            <button onclick="redirectToMain('event')">Events and Special Occasions</button>
+            <button onclick="redirectToMain('portfolio')">Professional and Personal Branding</button>
+            <button onclick="redirectToMain('ecommerce')">Online Commerce</button>
+            <button onclick="redirectToMain('education-community')">Educational and Community Engagement</button>
+        </div>
+    </div>
+
+    <script src="static/builder_script.js"></script>
+</body>
+</html>
