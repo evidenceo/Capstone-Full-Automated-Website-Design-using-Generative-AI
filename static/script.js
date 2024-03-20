@@ -1,141 +1,89 @@
+const socket = io.connect('http://localhost:5000');  // Adjust the URL as needed
+
+
+// Append messages to the chat history
+function appendMessage(message, sender) {
+    const chatContainer = document.getElementById('chatHistory');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}-message`;
+     // Check if 'message' is an object and has the 'text' property
+    const messageText = typeof message === 'object' && message.text ? message.text : message;
+    messageDiv.textContent = messageText;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the latest message
+}
+
+// Function to initiate the conversation
+function startConversation() {
+    socket.emit('start_conversation');
+
+}
+
+// Function to send a user message to the server
+function sendMessage(message) {
+    socket.emit('user_response', { message: message });
+}
+
+// Function to handle incoming messages from the server
+socket.on('conversation_update', (data) => {
+    console.log(data) // Debug
+    if (data.message) {
+        appendMessage(data.message, 'bot');
+    }
+    if (data.generatedText) {
+        appendMessage(data.generatedText, 'bot');
+    }
+
+    if (data.response_type === 'text') {
+        enableInput();
+    } else if (data.response_type === 'button' && data.buttons) {
+        displayChoices(data.buttons);
+    } else if (data.response_type === null) {
+        disableInput();
+    }
+    console.log(data) // Debug
+    // Handle other types of data (e.g., 'generatedCode') as needed
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     startConversation(); // Start the conversation when the page loads
+
     const sendButton = document.getElementById('sendBtn');
     const chatInput = document.getElementById('chatInput');
-    const chatHistory = document.getElementById('chatHistory');
 
     sendButton.addEventListener('click', () => {
         const message = chatInput.value.trim();
         if (message) {
             appendMessage(message, 'user');
-            sendMessage(message); // Send the user message to the server
-            chatInput.value = '';  // Clear the input field.
+            sendMessage(message);
+            chatInput.value = ''; // Clear the input after sending
         }
     });
 
     chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();  // Prevent form submission.
-            const message = chatInput.value.trim();
-            if (message) {
-                appendMessage(message, 'user');
-                sendMessage(message); // Send the user message to the server
-                chatInput.value = '';  // Clear the input field.
-            }
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Prevent the default action to avoid form submission
+            sendButton.click(); // Trigger the send button click event
         }
     });
 });
 
-function startConversation() {
-    // Initialize the conversation without any user message
-    sendMessage('');
+function disableInput() {
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendBtn');
+    // Disable the input field and button
+    chatInput.disabled = true;
+    sendButton.disabled = true;
 }
 
-// Function to handle sending a message
-    function sendMessage(message) {
-        fetch('/conversation', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: message }),
-        })
-        .then(response => response.json())
-        .then(data => {
-           receiveMessage(data); // Process the data received from the server
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-
-function receiveMessage(data) {
-    appendMessage(data.GeneratedText, 'bot');
-    // Handle FrontEndAction if present
-    if (data.FrontEndAction) {
-        handleFrontEndAction(data.FrontEndAction);
-    } else {
-        // Check if both TextInput and ButtonsInput indicate no user response is needed
-        if (data.UserInputOptions.TextInput === false && data.UserInputOptions.ButtonsInput.length === 0) {
-            // TransitionTime should be a number; ensure it's properly set in Node definitions
-            const transitionTime = data.TransitionTime ? parseInt(data.TransitionTime, 10) : 0;
-            // Automatically progress after the specified delay
-            setTimeout(() => sendMessage(''), transitionTime * 1000);
-        } else {
-            // Handle cases where user input is required
-            if (data.UserInputOptions.ButtonsInput.length > 0) {
-                displayChoices(data.UserInputOptions.ButtonsInput);
-            }
-            document.getElementById('chatInput').disabled = !data.UserInputOptions.TextInput;
-        }
-    }
+function enableInput() {
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendBtn');
+    // Disable the input field and button
+    chatInput.disabled = false;
+    sendButton.disabled = false;
 }
 
-// Implement a function to handle FrontEndAction
-function handleFrontEndAction(action) {
-    switch (action.action) {
-        case 'extractHTML':
-            extractAndSendHTML(action.targetPage);
-            break;
-        // Handle other actions as needed
-    }
-}
-
-// Function to extract HTML content from the iframe and send it back to the server
-function extractAndSendHTML(targetPage) {
-    var iframe = document.getElementById('previewFrame');
-    if (iframe.contentWindow) {
-        // Assuming same-origin policy is not an issue
-        var htmlContent = iframe.contentWindow.document.documentElement.outerHTML;
-        // Send the HTML content back to the server
-        sendContentToServer(htmlContent, targetPage);
-    }
-}
-
-// Function to send extracted content back to the server
-function sendContentToServer(content, targetPage) {
-    fetch('/receive_content', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: content, targetPage: targetPage }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status == 'Content received') {
-            // Trigger the next step in the conversation indicating processing can start
-            sendMessage("Next Node");
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-}
-
-// Implement the updateIframeContent function if you decide to update parts of the iframe content
-// This function would need details about how to find and update specific parts of your iframe's document
-// function updateIframeContent(modifiedContent, targetPage) {
-//     // Implementation depends on your iframe structure and how you wish to update it
-// }
-
-
-function appendMessage(message, sender) {
-    const messageElement = document.createElement('div');
-    messageElement.textContent = message;
-    messageElement.className = sender === 'user' ? 'user-message' : 'bot-message';
-    chatHistory.appendChild(messageElement);
-}
-
-
-function displayMessage({ text, sender }) {
-    const chatContainer = document.getElementById('chatHistory');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}-message`;
-    messageDiv.textContent = text;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
 
 function displayChoices(buttons) {
     buttons.forEach(button => {
@@ -143,8 +91,8 @@ function displayChoices(buttons) {
         buttonElement.textContent = button.name;
         buttonElement.className = 'chat-button';
         buttonElement.onclick = () => {
-            displayMessage({ text: button.name, sender: 'user' }); // Display button text as user message
-            sendMessage(button.name); // Send the button's action to Voiceflow
+            appendMessage({ text: button.name, sender: 'user' }); // Display button text as user message
+            sendMessage(button.value); // Send the button's value to the backend
             clearButtons();
         };
         document.getElementById('chatHistory').appendChild(buttonElement);
@@ -161,21 +109,30 @@ function clearButtons() {
 //IFRAME JS
 //////////////////////////////////////////////////////////////////
 
-// Function to reload the preview iframe
-function reloadPreview() {
-    var previewFrame = document.getElementById('previewFrame');
-    var currentSrc = previewFrame.src;
-    previewFrame.src = '';
-    previewFrameFrame.src = currentSrc;
-}
+document.addEventListener('DOMContentLoaded', function() {
+    // Retrieve the selected template type from local storage
+    const selectedTemplateType = localStorage.getItem('selectedTemplateType');
 
-// Function to load specific page content into the iframe
-function loadPageContent(pageName) {
-    var previewFrame = document.getElementById('previewFrame');
-    // Construct the URL for the specific page
-    var pageUrl = `/template_content/${templateId}/${pageName}`;
-    previewFrame.src = pageUrl;
-}
+    if (selectedTemplateType) {
+        // Request the template details from the server via WebSocket
+        socket.emit('request_template', { type: selectedTemplateType });
+
+        // Clear the selected template type from local storage to avoid unintended reuse
+        localStorage.removeItem('selectedTemplateType');
+    }
+
+    // Handle the server response with the template information
+    socket.on('template_response', function(data) {
+        if (data.templateId && data.initialPageContent) {
+            // Store the templateId in local storage
+            localStorage.setItem('currentTemplateId', data.templateId);
+            loadPageContent('Home');
+        } else {
+            console.error('Error fetching template:', data.error);
+            // Handle error, such as showing a notification to the user
+        }
+    });
+});
 
 // Message listener for navigation within the iframe
 window.addEventListener('message', function(event) {
@@ -185,8 +142,40 @@ window.addEventListener('message', function(event) {
     }
 });
 
-// Set the initial content of the iframe
-document.addEventListener('DOMContentLoaded', function() {
-    var previewFrame = document.getElementById('previewFrame');
-    previewFrame.src = templateContentUrl; // Use the variable here
+// Function to load specific page content into the iframe
+function loadPageContent(pageName) {
+    // Retrieve the templateId from local storage
+    const templateId = localStorage.getItem('currentTemplateId');
+    if (templateId) {
+        const previewFrame = document.getElementById('previewFrame');
+        const pageUrl = `/template_content/${templateId}/${pageName}`;
+        previewFrame.src = pageUrl;
+    }
+}
+
+socket.on('update_template', function(data) {
+    const iframe = document.getElementById('previewFrame');
+    if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
+        const iframeDoc = iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(data.template);
+        iframeDoc.close();
+    } else {
+        console.error("Iframe document is not accessible");
+    }
 });
+
+// Listen for an event indicating that the iframe should be refreshed
+socket.on('refresh_iframe', function() {
+    refreshIframe();
+});
+
+// Function to refresh iframe content
+function refreshIframe() {
+    const iframe = document.getElementById('previewFrame');
+    iframe.contentWindow.location.reload(true);
+}
+
+
+
+

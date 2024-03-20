@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
     <link rel="stylesheet" href="static/main_styles.css">
-   <script type="text/javascript">
-        var initialPageName = 'Home';  // 'Home' is the initial page
-        var templateId = {{ template_id | tojson }};  // Ensure this is correctly obtained
-        var templateContentUrl = `/template_content/${templateId}/${initialPageName}`;
-   </script>
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
 </head>
 <body>
     <div class="container">

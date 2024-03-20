@@ -3,39 +3,49 @@ import openai  # pip install openai==0.28
 
 class OpenAIChatBot:
 
-    def __init__(self, apiKey, openAIModelVersion, systemRole, systemContent):  # Class attributes
+    def __init__(self, apiKey, openAIModelVersion, systemRole, systemContent, maxHistorySize=10):  # Class attributes
         self.apiKey = apiKey  # Personal OpenAI product key
         self.openAIModelVersion = openAIModelVersion  # GPT Model/Version to use
         self.systemRole = systemRole  # OpenAI system's contextual role
         self.systemContent = systemContent  # OpenAI's system's contextual instructions
-        self.messageHistory = []  # Global table to keep track of the message history between the user and the system
-
-    # Function to initialize the OpenAI chat box system configurations
-    def setUpChatBot(self):
-        self.messageHistory = []  # Clear message history
+        self.messageHistory = [{"role": "system",
+                                "content": systemContent}]  # Global table to keep track of the message history between the user and the system
+        self.maxHistorySize = maxHistorySize
         openai.api_key = self.apiKey
+        self.reset_history()
 
-        if self.systemRole and self.systemContent:  # If the system's role and content have been provided
+    def update_system_context(self, role=None, content=None):  # Allows for dynamic updates to system's role and content
+        if role:
+            self.systemRole = role
+        if content:
+            self.systemContent = content
+        self.reset_history()
 
-            systemInfo = {"role": self.systemRole, "content": self.systemContent}  # The system's perceived role and
-            # prompted behaviour
-            self.messageHistory.append(systemInfo)  # Append the system's prompt to the message history to provide
-            # the API this context
+    def append_to_history(self, role, content):
+        # Ensure the history does not exceed the maximum size
+        if len(self.messageHistory) > self.maxHistorySize:
+            self.messageHistory.pop(0)  # Remove the oldest entry
+        self.messageHistory.append({"role": role, "content": content})
 
-    # Function to generate a response to the most recent user prompt given the message history, and add the response
-    # to the message history
-    def generatePromptResponse(self, promptMessage):
+    def generate_prompt_response(self, prompt_message):
+        self.append_to_history("user", prompt_message)
 
-        promptInfo = {"role": "user", "content": promptMessage}  # Compile user role and message into a dictionary
-        self.messageHistory.append(promptInfo)  # Add the user prompt to the message history array
+        # Generate response using the OpenAI Chat Completions API
+        response = openai.ChatCompletion.create(
+            model=self.openAIModelVersion,
+            messages=self.messageHistory,
+            temperature=0,
+            max_tokens=1024,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
 
-        promptResponseInfo = openai.ChatCompletion.create(model=self.openAIModelVersion, messages=self.messageHistory)
-        # Receive the latest prompt response given the message history
-        promptReply = promptResponseInfo.choices[0].message.content  # Opens the first response choice and displays
-        # the message's content
+        # Extract and return the text of the response
+        reply = response.choices[0].message["content"]
+        self.append_to_history("system", reply)
+        return reply
 
-        promptReplyInfo = {"role": self.systemRole, "content": promptReply}  # Compile system role and message into a
-        # dictionary
-        self.messageHistory.append(promptReplyInfo)  # Add the prompt response to the message history array
-
-        return promptReply
+    def reset_history(self):
+        self.messageHistory = [{"role": "system", "content": self.systemContent}]
+        print("Initial context set.")  # Debug print to confirm this runs

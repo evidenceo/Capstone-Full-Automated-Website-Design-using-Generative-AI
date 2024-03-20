@@ -1,4 +1,4 @@
-from main import app
+from main import create_app
 from models import db, WebsiteTemplate, Page
 
 
@@ -7,7 +7,7 @@ def read_file(file_path):
         return file.read()
 
 
-def init_db():
+def init_db(app):
     with app.app_context():
         db.create_all()
 
@@ -37,4 +37,5 @@ def init_db():
 
 
 if __name__ == '__main__':
-    init_db()
+    app, socketio = create_app()  # Create an app context for database initialization
+    init_db(app)  # Initialize the database with the app context

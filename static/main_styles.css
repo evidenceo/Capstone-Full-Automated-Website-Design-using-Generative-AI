@@ -48,6 +48,78 @@ body, html {
     /* Style for preview header */
 }
 
+/* Chat button styling */
+.chat-button {
+    padding: 8px 15px;
+    margin: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.chat-button:hover {
+    background-color: #0056b3;
+}
+
+/* User message styling */
+.user-message {
+    margin: 5px;
+    padding: 10px;
+    background-color: #dcf8c6;
+    border-radius: 8px;
+    align-self: flex-end;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+/* Bot message styling */
+.bot-message {
+    margin: 5px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #dedede;
+    border-radius: 8px;
+    align-self: flex-start;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+/* Utility classes for text alignment */
+.align-left {
+    text-align: left;
+}
+
+.align-right {
+    text-align: right;
+}
+
+/* Additional styles to ensure visual distinction between user and bot messages */
+.user-message:after {
+    content: "";
+    position: relative;
+    top: 100%;
+    right: 0;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #dcf8c6 transparent transparent transparent;
+    align-self: flex-end;
+}
+
+.bot-message:before {
+    content: "";
+    position: relative;
+    top: 100%;
+    left: 0;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+    align-self: flex-start;
+}
+
+
 #previewFrame {
     width: 100%;
     height: calc(100% - 60px); /* Adjust height based on header/footer size */
@@ -67,4 +139,4 @@ body, html {
     right: 20px;
 }
 
-/* Add further styling for buttons, chat box, etc. */
+
