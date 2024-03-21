@@ -41,6 +41,10 @@ socket.on('conversation_update', (data) => {
     } else if (data.response_type === null) {
         disableInput();
     }
+
+    if (data.action === 'show_popup') {
+        displayPopup(data.message, data.buttons);
+    }
     console.log(data) // Debug
     // Handle other types of data (e.g., 'generatedCode') as needed
 });
@@ -97,6 +101,24 @@ function displayChoices(buttons) {
         };
         document.getElementById('chatHistory').appendChild(buttonElement);
     });
+}
+
+function displayPopup(message, buttons) {
+    console.log(data) // Debug
+    document.getElementById('popupMessage').textContent = message;
+
+    const popupContainer = document.getElementById('popupContainer');
+    popupContainer.style.display = 'flex';
+
+    document.getElementById('continueButton').onclick = () => {
+        sendMessage('continue');
+        popupContainer.style.display = 'none';
+    }
+
+    document.getElementById('skipButton').onclick = () => {
+        sendMessage('skip');
+        popupContainer.style.display = 'none';
+    }
 }
 
 

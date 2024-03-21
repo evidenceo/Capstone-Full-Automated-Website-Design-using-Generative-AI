@@ -31,7 +31,7 @@ def create_app():
 
     # Initialize flow and state manager
     state_manager = StateManager()
-    flow_manager = FlowManager(state_manager, socketio)
+    flow_manager = FlowManager(app, state_manager, socketio)
 
     # Register socketio events
     register_socketio_events(socketio, state_manager, flow_manager)

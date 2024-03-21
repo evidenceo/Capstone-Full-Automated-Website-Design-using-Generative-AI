@@ -17,6 +17,7 @@ body, html {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .chat-history {
@@ -137,6 +138,27 @@ body, html {
 
 #launchBtn {
     right: 20px;
+}
+
+/* Popup */
+.popup-container {
+    position: absolute; /* Changed from fixed to absolute */
+    left: 0;
+    top: 0;
+    right: 0; /* Ensure it covers the full width of the chat container */
+    bottom: 0; /* Ensure it covers the full height of the chat container */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Make sure this is above other elements within the chat container */
+}
+
+.popup {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 

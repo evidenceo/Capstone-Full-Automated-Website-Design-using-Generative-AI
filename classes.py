@@ -1,5 +1,6 @@
 from threading import Timer
 from models import db, Page
+from flask import current_app
 
 
 class ServiceLocator:
@@ -18,6 +19,7 @@ class ServiceLocator:
 class StateManager:
     def __init__(self):
         self.current_node = None
+        self.current_step = None
         self.data = {}
 
     def set_current_node(self, node):
@@ -26,18 +28,24 @@ class StateManager:
     def get_current_node(self):
         return self.current_node
 
+    def set_current_step(self, step):
+        self.current_step = step
+
+    def get_current_step(self):
+        return self.current_step
+
     def store_data(self, key, value):
         self.data[key] = value
 
     def retrieve_data(self, key):
         return self.data.get(key)
 
-
 # Abstract representation of a conversation step
 class Node:
-    def __init__(self, name, next_node=None):
+    def __init__(self, name, next_node=None, requires_input=True):
         self.name = name
         self.next_node = next_node
+        self.requires_input = requires_input
 
     def process(self, state_manager, user_input=None):
         raise NotImplementedError("Each node must implement its process method.")
@@ -65,7 +73,8 @@ class DBUtils:
 
 # Manage the flow of the conversation
 class FlowManager:
-    def __init__(self, state_manager, socketio):
+    def __init__(self, app, state_manager, socketio):
+        self.app = app
         self.state_manager = state_manager
         self.nodes = {}
         self.socketio = socketio
@@ -80,29 +89,36 @@ class FlowManager:
 
         current_node = self.nodes[current_node_name]
         print(f"Flow:{current_node}")  # Debug
-        result = current_node.process(self.state_manager, user_input)
-        print(f"result:{result}")  # debug
 
+        if current_node.requires_input or user_input is not None:
+            # For node requires input, it is a synchronous node, so nodes that involve interaction with the user
+            self._process_node(current_node, user_input)
+        else:
+            # For nodes that do not require interaction with the user, asynchronous nodes
+            self._process_async_node(current_node)
+
+    def _process_node(self, node, user_input):
+        result = node.process(self.state_manager, user_input)
+        print(f"result:{result}")  # debug
+        self._handle_result(result)
+
+    def _process_async_node(self, node):
+        with self.app.app_context():
+            result = node.process(self.state_manager)
+            self._handle_result(result)
+
+    def _handle_result(self, result):
         if 'message' and 'response_type' in result:
             self.socketio.emit('conversation_update', result)
 
-        if 'next_node' in result and not result.get('auto_progress', False):
-            self.state_manager.set_current_node(result['next_node'])
-
-        # Automatically progress to the next node if needed
         if 'next_node' in result:
+            self.state_manager.set_current_node(result['next_node'])
             if result.get('auto_progress', False):
-                # If auto_progress is True, delay the progression
-                self.schedule_auto_progress(result['next_node'], delay=2)  # delay in seconds
-            else:
-                self.state_manager.set_current_node(result['next_node'])
+                self.schedule_auto_progress(result['next_node'])
 
-    def schedule_auto_progress(self, next_node_name, delay):
+        if 'action' in result:
+            self.socketio.emit('conversation_update', result)
+
+    def schedule_auto_progress(self, next_node_name):
         """Schedule automatic progression to the next node after a delay."""
-        Timer(delay, self.auto_progress, args=[next_node_name]).start()
-
-    def auto_progress(self, next_node_name):
-        """Automatically progress to the next node."""
-        self.state_manager.set_current_node(next_node_name)
-        # Process the next node; since user_input is None, it initiates the node's action without waiting for input
-        self.process_input()
+        Timer(2, lambda: self._process_async_node(self.nodes[next_node_name])).start()
