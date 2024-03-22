@@ -27,7 +27,13 @@ function sendMessage(message) {
 // Function to handle incoming messages from the server
 socket.on('conversation_update', (data) => {
     console.log(data) // Debug
-    if (data.message) {
+
+    // Check if its a popup action first to prevent appending the message to the chat container
+    if (data.action === 'show_popup' && data.buttons && data.message) {
+        displayPopup(data.message, data.buttons);
+    } else {
+        // Handle normal message appending and input enabling/disabling
+        if (data.message) {
         appendMessage(data.message, 'bot');
     }
     if (data.generatedText) {
@@ -41,9 +47,6 @@ socket.on('conversation_update', (data) => {
     } else if (data.response_type === null) {
         disableInput();
     }
-
-    if (data.action === 'show_popup') {
-        displayPopup(data.message, data.buttons);
     }
     console.log(data) // Debug
     // Handle other types of data (e.g., 'generatedCode') as needed
@@ -104,23 +107,43 @@ function displayChoices(buttons) {
 }
 
 function displayPopup(message, buttons) {
-    console.log(data) // Debug
-    document.getElementById('popupMessage').textContent = message;
+    // Find the chat history container
+    const chatHistoryContainer = document.getElementById('chatHistory');
 
-    const popupContainer = document.getElementById('popupContainer');
+    // Create the popup container
+    const popupContainer = document.createElement('div');
+    popupContainer.id = 'popupContainer';
+    popupContainer.className = 'popup-container';
+
+    // Create the popup content container
+    const popup = document.createElement('div');
+    popup.className = 'popup';
+    popupContainer.appendChild(popup);
+
+    // Add message to the popup
+    const popupMessage = document.createElement('p');
+    popupMessage.id = 'popupMessage';
+    popupMessage.textContent = message;
+    popup.appendChild(popupMessage);
+
+     // Create buttons and add to the popup
+    buttons.forEach(button => {
+        const buttonElement = document.createElement('button');
+        buttonElement.textContent = button.name;
+        buttonElement.onclick = () => {
+            sendMessage(button.value);
+            popupContainer.style.display = 'none';
+            document.body.removeChild(popupContainer); // Remove popup after use
+        };
+        popup.appendChild(buttonElement);
+    });
+
+    // Append the popup container to the chat history div
+    chatHistoryContainer.appendChild(popupContainer);
+
+    // Show the popup
     popupContainer.style.display = 'flex';
-
-    document.getElementById('continueButton').onclick = () => {
-        sendMessage('continue');
-        popupContainer.style.display = 'none';
-    }
-
-    document.getElementById('skipButton').onclick = () => {
-        sendMessage('skip');
-        popupContainer.style.display = 'none';
-    }
-}
-
+ }
 
 function clearButtons() {
     document.querySelectorAll('.chat-button').forEach(button => button.remove());

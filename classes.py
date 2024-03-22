@@ -1,6 +1,5 @@
 from threading import Timer
 from models import db, Page
-from flask import current_app
 
 
 class ServiceLocator:
@@ -39,6 +38,7 @@ class StateManager:
 
     def retrieve_data(self, key):
         return self.data.get(key)
+
 
 # Abstract representation of a conversation step
 class Node:

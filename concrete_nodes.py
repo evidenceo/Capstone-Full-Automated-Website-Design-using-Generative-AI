@@ -286,32 +286,41 @@ class CustomizeTemplate(Node):
 
 
 class DetermineNextStep(Node):
-    def __init__(self, name, next_node=None, skip_node=None,requires_input=False):
+    def __init__(self, name, next_node=None, requires_input=True):
         super().__init__(name, next_node, requires_input)
-        self.skip_node = skip_node
 
     def process(self, state_manager, user_input=None):
-        print("Here right now") # For debug - it prints
-        action = 'show_popup'
-        message = ("The next part of the conversation involves customizing each page to further meet your goals. If you"
-                   "are okay with the current customization, you can skip this step, otherwise let's continue")
-        buttons = [
-            {'label': 'Continue', 'value': 'continue'},
-            {'label': 'Skip', 'value': 'skip'}
-        ]
-        next_node = None
-        return {
-            'action': action,
-            'message': message,
-            'buttons' : buttons,
-            'next_node': next_node
-        }
-        # Here I want a popup first that blurs the background with a message that says
-        # Hi Elaa here! The next step is to further customize your template in this stage we would iterate each page
-        # and customize the structure to meet your preferences. If you are okay with the structure at the moment,
-        # skip this step and move to the design board, otherwise click continue
+        if user_input is None:
+            # send message to frontend to show the damn popup
+            action = 'show_popup'
+            message = ("The next part of the conversation involves customizing each page to further meet your goals. "
+                       "If you are okay with the current customization, you can skip this step, otherwise let's"
+                       " continue")
+            buttons = [
+                {'name': 'Continue', 'value': 'continue'},
+                {'name': 'Skip', 'value': 'skip'}
+            ]
+            response_type = 'button'
 
-        # Then there would be two buttons [continue] and [skip]
+            return {
+                'action': action,
+                'message': message,
+                'buttons': buttons,
+                'response_type': response_type
+            }
+        else:
+            if user_input == 'continue':
+                next_node = 'SetWebsiteTheme'
+                auto_progress = True
 
-        # Work on [continue] now. when the user clicks on continue, it would go back and continue the conversation in
-        # the chatbot starting with home page
+                return {'next_node': next_node, 'auto_progress': auto_progress}
+            elif user_input == 'skip':
+                message = ("Got it. The conversation will end here. Click on the 'Next' button at the bottom right to"
+                           " customize the template further in the edit dashboard")
+                response_type = None
+                next_node = None
+
+
+class SetWebsiteTheme(Node):
+    pass
+
