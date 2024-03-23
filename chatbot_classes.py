@@ -2,7 +2,7 @@ import openai  # pip install openai==0.28
 
 with open("APIKey.txt", "r") as textFile:
     api_key = textFile.read().strip()  # Personal OpenAI product key
-openAIModelVersion = "gpt-4-turbo-preview"
+openAIModelVersion = "gpt-4"
 
 
 class TemplateModificationBot:
@@ -69,7 +69,7 @@ class TemplateModificationBot:
                             " explanations or add any text.Just generate CSS code based on instructions and send the"
                             " result back. I repeat do not send any explanations, no altering original CSS without"
                             " direct instruction from user. Just perform the task and send the result back."
-                },
+                 },
                 {"role": "user", "content": combined_instructions}
             ],
             temperature=0.2,
@@ -77,6 +77,41 @@ class TemplateModificationBot:
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0,
+        )
+
+        # Assuming the AI response includes the modified CSS directly
+        modified_css = response.choices[0].message["content"]
+        return modified_css
+
+    def get_metadata(self, web_page):
+        """
+          Retrieve the metadata of the given webpage most likely HTML but who knowsss.
+
+          :param web_page: The webpage we are getting the metadata.
+          :return: The metadata of webpage.
+        """
+
+        response = openai.ChatCompletion.create(
+            model=self.model_version,
+            messages=[
+                {"role": "system",
+                 "content": "You retrieve metadata of website pages in json format"
+                 },
+                {"role": "user", "content": f"Generate detailed metadata for the HTML, including comments "
+                                            f"that guide the CSS customization. The metadata should reflect the "
+                                            f"structure, semantic elements used, areas designated for dynamic effects,"
+                                            f" and any specific id/class names that will be targeted for styling. "
+                                            f"This metadata will inform the CSS customization process, ensuring that "
+                                            f"the styling precisely matches the layout's intended design and "
+                                            f"interactive features. Here is the HTML code: {web_page}"
+                 }
+                ],
+            temperature=0.2,
+            max_tokens=3000,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0,
+            response_format={"type": "json_object"}
         )
 
         # Assuming the AI response includes the modified CSS directly

@@ -107,7 +107,7 @@ class FlowManager:
             result = node.process(self.state_manager)
             self._handle_result(result)
 
-    def _handle_result(self, result):
+    def _handle_result(self, result, user_input):
         if 'message' and 'response_type' in result:
             self.socketio.emit('conversation_update', result)
 
@@ -118,6 +118,10 @@ class FlowManager:
 
         if 'action' in result:
             self.socketio.emit('conversation_update', result)
+
+        if user_input == 'skip':
+            self.state_manager.set_current_node(current_node.skip_node)
+            return self.nodes[skip_node].process(self.state_manager)
 
     def schedule_auto_progress(self, next_node_name):
         """Schedule automatic progression to the next node after a delay."""

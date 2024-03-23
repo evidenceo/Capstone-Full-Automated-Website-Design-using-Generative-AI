@@ -110,6 +110,12 @@ function displayPopup(message, buttons) {
     // Find the chat history container
     const chatHistoryContainer = document.getElementById('chatHistory');
 
+    // Check if a popup already exists and remove it
+    let existingPopup = document.getElementById('popupContainer');
+    if (existingPopup) {
+        existingPopup.remove();
+    }
+
     // Create the popup container
     const popupContainer = document.createElement('div');
     popupContainer.id = 'popupContainer';
@@ -130,10 +136,16 @@ function displayPopup(message, buttons) {
     buttons.forEach(button => {
         const buttonElement = document.createElement('button');
         buttonElement.textContent = button.name;
-        buttonElement.onclick = () => {
+        buttonElement.onclick = (event) => {
+            // Prevent default form submission and stop event propagation
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Remove popup from DOM
+            chatHistoryContainer.removeChild(popupContainer);
+
+            // Send the button's value to the backend
             sendMessage(button.value);
-            popupContainer.style.display = 'none';
-            document.body.removeChild(popupContainer); // Remove popup after use
         };
         popup.appendChild(buttonElement);
     });
