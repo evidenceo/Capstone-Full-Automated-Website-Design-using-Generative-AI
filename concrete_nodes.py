@@ -60,12 +60,15 @@ class GetInformation(Node):
             state_manager.store_data('last_system_message', message)
 
             # set response type for user
-            response_type = 'hybrid' # allows for both text and button
+            response_type = 'hybrid'  # allows for both text and button
 
             # Button for user to skip this step
-            button = [{'name': 'Skip to Page modification', 'value': 'skip'}]
+            buttons = [{'name': 'Skip to Page modification', 'value': 'skip'}]
 
-            return {'message': message, 'response_type': response_type, 'button': button}
+            # reset step
+            state_manager.set_current_step(None)
+
+            return {'message': message, 'response_type': response_type, 'buttons': buttons}
         else:
             # After getting user input, save and move to the next step
             # retrieve last_system_message
@@ -356,6 +359,7 @@ class BasePageModification(Node):
             return self.request_changes(state_manager, user_input)
         elif current_step == 'finalize_interaction':
             return self.finalize_interaction(state_manager)
+        return {}
 
     def request_changes(self, state_manager, user_input):
         state_manager.set_current_step('request_changes')
@@ -365,8 +369,16 @@ class BasePageModification(Node):
 
         if user_input is None:
             message = f"What would you like to change in the {self.page_name} page?"
-            response_type = "text"
-            return {'message': message, 'response_type': response_type}
+            # set response type for user
+            response_type = 'hybrid'  # allows for both text and button
+
+            # Button for user to skip this step
+            buttons = [{'name': 'Skip to Next Page', 'value': 'skip'}]
+
+            # reset step
+            state_manager.set_current_step(None)
+
+            return {'message': message, 'response_type': response_type, 'buttons': buttons}
         else:
             template_id = state_manager.retrieve_data('template_id')
             page_name = self.page_name
@@ -462,21 +474,37 @@ class BasePageModification(Node):
 class HomePage(BasePageModification):
     def __init__(self, name, next_node='AboutPage', requires_input=True):
         super().__init__(name, page_name='Home', next_node=next_node, requires_input=requires_input)
+        self.skip_node = "AboutPage"
 
 
 class AboutPage(BasePageModification):
     def __init__(self, name, next_node='ProductPage', requires_input=True):
         super().__init__(name, page_name='About', next_node=next_node, requires_input=requires_input)
+        self.skip_node = "ProductPage"
 
 
 class ProductPage(BasePageModification):
     def __init__(self, name, next_node='ContactPage', requires_input=True):
         super().__init__(name, page_name='Products', next_node=next_node, requires_input=requires_input)
+        self.skip_node = "ContactPage"
 
 
 class ContactPage(BasePageModification):
     def __init__(self, name, next_node='FinalMessage', requires_input=False):
         super().__init__(name, page_name='Contact', next_node=next_node, requires_input=requires_input)
+        self.skip_node = "FinalMessage"
+
+    def request_changes(self, state_manager, user_input):
+        # Call the base implementation to set up the common parts
+        base_result = super().request_changes(state_manager, user_input)
+
+        if user_input is None:
+            # Customizing the skip button message for the ContactPage
+            buttons = [{'name': 'End Conversation', 'value': 'skip'}]
+            # Update the result dictionary with the customized buttons
+            base_result.update({'buttons': buttons})
+
+        return base_result
 
     def finalize_interaction(self, state_manager):
         message = ("I have carried out the modifications you requested. The conversation will end here. Click on the"

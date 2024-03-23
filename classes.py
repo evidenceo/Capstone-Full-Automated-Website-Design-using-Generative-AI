@@ -90,12 +90,20 @@ class FlowManager:
         current_node = self.nodes[current_node_name]
         print(f"Flow:{current_node}")  # Debug
 
-        if current_node.requires_input or user_input is not None:
-            # For node requires input, it is a synchronous node, so nodes that involve interaction with the user
-            self._process_node(current_node, user_input)
+        # Check if the user chose to skip the current node
+        if user_input == 'skip' and hasattr(current_node, 'skip_node'):
+            # Set the current node to whatever node is specified for skipping
+            self.state_manager.set_current_node(current_node.skip_node)
+            # Process the new current node from the start
+            self.process_input()
         else:
-            # For nodes that do not require interaction with the user, asynchronous nodes
-            self._process_async_node(current_node)
+            if current_node.requires_input or user_input is not None:
+                # For node requires user input, it is a synchronous node, so nodes that involve interaction
+                # with the user
+                self._process_node(current_node, user_input)
+            else:
+                # For nodes that do not require interaction with the user, asynchronous nodes
+                self._process_async_node(current_node)
 
     def _process_node(self, node, user_input):
         result = node.process(self.state_manager, user_input)
@@ -107,7 +115,7 @@ class FlowManager:
             result = node.process(self.state_manager)
             self._handle_result(result)
 
-    def _handle_result(self, result, user_input):
+    def _handle_result(self, result):
         if 'message' and 'response_type' in result:
             self.socketio.emit('conversation_update', result)
 
@@ -119,9 +127,6 @@ class FlowManager:
         if 'action' in result:
             self.socketio.emit('conversation_update', result)
 
-        if user_input == 'skip':
-            self.state_manager.set_current_node(current_node.skip_node)
-            return self.nodes[skip_node].process(self.state_manager)
 
     def schedule_auto_progress(self, next_node_name):
         """Schedule automatic progression to the next node after a delay."""

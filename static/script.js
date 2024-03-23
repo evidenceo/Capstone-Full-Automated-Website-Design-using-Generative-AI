@@ -41,12 +41,15 @@ socket.on('conversation_update', (data) => {
     }
 
     if (data.response_type === 'text') {
-        enableInput();
-    } else if (data.response_type === 'button' && data.buttons) {
-        displayChoices(data.buttons);
-    } else if (data.response_type === null) {
-        disableInput();
-    }
+            enableInput();
+        } else if (data.response_type === 'button' && data.buttons) {
+            displayChoices(data.buttons);
+        } else if (data.response_type === null) {
+            disableInput();
+        } else if (data.response_type === 'hybrid') {
+            enableInput();
+            displayChoices(data.buttons);
+        }
     }
     console.log(data) // Debug
     // Handle other types of data (e.g., 'generatedCode') as needed
