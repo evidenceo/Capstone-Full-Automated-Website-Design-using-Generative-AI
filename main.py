@@ -1,7 +1,8 @@
 import os
 from flask import Flask
 from flask_socketio import SocketIO
-from models import db
+from flask_login import LoginManager
+from models import db, User
 from routes import http_routes
 from template_routes import template_blueprint
 from socketio_routes import register_socketio_events
@@ -14,6 +15,15 @@ def create_app():
     app = Flask(__name__)
     socketio = SocketIO(app, cors_allowed_origins=["http://127.0.0.1:5000"])
     app.secret_key = os.urandom(24)
+
+    # Initialize Flask-Login
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+
+    # Define the user loader callback for Flask-Login
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     # Register Blueprints
     app.register_blueprint(http_routes)

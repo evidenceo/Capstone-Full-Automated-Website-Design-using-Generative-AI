@@ -1,12 +1,13 @@
 from flask import url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
@@ -56,11 +57,20 @@ class TemplateImage(db.Model):
 class UserTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    template_id = db.Column(db.Integer, db.ForeignKey('website_template.id'))
+    original_template_id = db.Column(db.Integer, db.ForeignKey('website_template.id'))  # Link to the original template
+    name = db.Column(db.String(255))  # Allow users to name their template
+    status = db.Column(db.String(50))  # E.g., 'in progress', 'completed'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    user = db.relationship('User', backref='user_templates')
+    pages = db.relationship('UserTemplatePage', backref='user_template', lazy='dynamic')
+
+
+class UserTemplatePage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_template_id = db.Column(db.Integer, db.ForeignKey('user_template.id'))
+    page_name = db.Column(db.String(80))
     modified_html = db.Column(db.Text)
     modified_css = db.Column(db.Text)
     modified_js = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    user = db.relationship('User', backref=db.backref('user_templates', lazy=True))
-    template = db.relationship('WebsiteTemplate', backref=db.backref('user_templates', lazy=True))
+    # You could also add created_at and updated_at fields if needed
