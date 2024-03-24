@@ -1,3 +1,4 @@
+from flask import url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -40,6 +41,16 @@ class Page(db.Model):
     html_content = db.Column(db.Text, nullable=False)
     css_content = db.Column(db.Text, nullable=False)
     js_content = db.Column(db.Text)
+
+
+class TemplateImage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    template_id = db.Column(db.Integer, db.ForeignKey('website_template.id'))
+    image_path = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.String(255))
+
+    def image_url(self):
+        return url_for('static', filename=self.image_path)
 
 
 class UserTemplate(db.Model):

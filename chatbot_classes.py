@@ -29,7 +29,7 @@ class TemplateModificationBot:
                  "content": "You are a code generator. Your task is to modify a given HTML code based on the "
                             "instruction of the user without altering the rest of the code. Do not give any "
                             "explanations.Just generate HTML code based on instructions. For example, if the "
-                            "instruction was change the website name to 'My New Website', think about the appropriate "
+                            "instruction was change the website name to 'My New Website', think about.html the appropriate "
                             "places the website name should be in the code, add it and send the updated code back, "
                             "with no explanation or text generation of any kind. Just perform the task and send the "
                             "result."
