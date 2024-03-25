@@ -1,5 +1,5 @@
 from threading import Timer
-from models import db, Page
+from models import db, UserTemplatePage
 
 
 class ServiceLocator:
@@ -53,16 +53,16 @@ class Node:
 
 class DBUtils:
     @staticmethod
-    def update_template_in_db(template_id, page_name, updated_content, content_type):
-        page = Page.query.filter_by(template_id=template_id, page_name=page_name).first()
+    def update_template_in_db(user_template_id, page_name, updated_content, content_type):
+        page = UserTemplatePage.query.filter_by(user_template_id=user_template_id, page_name=page_name).first()
 
         if page:
             if content_type == 'html':
-                page.html_content = updated_content
+                page.modified_html = updated_content
             elif content_type == 'css':
-                page.css_content = updated_content
+                page.modified_css = updated_content
             elif content_type == 'js':
-                page.js_content = updated_content
+                page.modified_js = updated_content
             else:
                 raise ValueError("Unsupported content type")
 

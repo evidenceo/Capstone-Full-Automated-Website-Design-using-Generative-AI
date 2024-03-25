@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - {website_name} Store</title>
-    <link rel="stylesheet" href="/template_files/ecommerce/plain-one/css/about_styles.css">
+     <link rel="stylesheet" href="/template_preview/css/{{user_template_id}}/{{page_name}}">
 </head>
 <body>
 
@@ -12,11 +12,12 @@
     <div class="container">
         <h1>{website_name}</h1>
         <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="shop.html">Shop</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+          <!--navigation bar containing links to different pages-->
+             <ul>
+                <li><a href="#" onclick="navigateTo('Home')">Home</a></li>
+                <li><a href="#" onclick="navigateTo('About')">About Us</a></li>
+                <li><a href="#" onclick="navigateTo('Product')">Products</a></li>
+                <li><a href="#" onclick="navigateTo('Contact')">Contact Us</a></li>
             </ul>
         </nav>
     </div>
@@ -37,6 +38,6 @@
         <p>&copy; 2024 {website_name} Store. All rights reserved.</p>
     </div>
 </footer>
-
+<script src="/template_preview/js/{{user_template_id}}/{{page_name}}"></script>
 </body>
 </html>

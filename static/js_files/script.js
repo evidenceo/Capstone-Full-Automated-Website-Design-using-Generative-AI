@@ -1,4 +1,4 @@
-const socket = io.connect('http://localhost:5000');  // Adjust the URL as needed
+const socket = io.connect('http://localhost:5001');  // Adjust the URL as needed
 
 
 // Append messages to the chat history
@@ -169,17 +169,9 @@ function clearButtons() {
 //IFRAME JS
 //////////////////////////////////////////////////////////////////
 
+// This is to load the template into the iframe
 document.addEventListener('DOMContentLoaded', function() {
-    // Retrieve the selected template type from local storage
-    const selectedTemplateType = localStorage.getItem('selectedTemplateType');
-
-    if (selectedTemplateType) {
-        // Request the template details from the server via WebSocket
-        socket.emit('request_template', { type: selectedTemplateType });
-
-        // Clear the selected template type from local storage to avoid unintended reuse
-        localStorage.removeItem('selectedTemplateType');
-    }
+    loadTemplatePage('Home');
 
     // Handle the server response with the template information
     socket.on('template_response', function(data) {
@@ -194,36 +186,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
 // Message listener for navigation within the iframe
 window.addEventListener('message', function(event) {
     // Optional: Check event.origin here for security
     if (event.data.type === 'navigate') {
-        loadPageContent(event.data.pageName);
+        loadTemplatePage(event.data.pageName);
     }
 });
 
 // Function to load specific page content into the iframe
-function loadPageContent(pageName) {
-    // Retrieve the templateId from local storage
-    const templateId = localStorage.getItem('currentTemplateId');
-    if (templateId) {
-        const previewFrame = document.getElementById('previewFrame');
-        const pageUrl = `/template_content/${templateId}/${pageName}`;
+function loadTemplatePage(pageName) {
+    if (!userTemplateId) return; // Ensure the template ID is available
+
+    if (userTemplateId) {
+        const iframe = document.getElementById('previewFrame');
+        const doc = iframe.contentWindow.document;
+        const pageUrl = `/template_preview/html/${userTemplateId}/${pageName}`;
         previewFrame.src = pageUrl;
     }
 }
 
-socket.on('update_template', function(data) {
-    const iframe = document.getElementById('previewFrame');
-    if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
-        const iframeDoc = iframe.contentWindow.document;
-        iframeDoc.open();
-        iframeDoc.write(data.template);
-        iframeDoc.close();
-    } else {
-        console.error("Iframe document is not accessible");
-    }
-});
 
 // Listen for an event indicating that the iframe should be refreshed
 socket.on('refresh_iframe', function() {
@@ -233,8 +216,14 @@ socket.on('refresh_iframe', function() {
 // Function to refresh iframe content
 function refreshIframe() {
     const iframe = document.getElementById('previewFrame');
-    iframe.contentWindow.location.reload(true);
+    const currentSrc = iframe.src;
+    iframe.src = "{{ url_for('conversation') }}"; // Temporarily set src to empty to ensure the reload works in all browsers
+    iframe.src = currentSrc;
 }
+
+
+
+
 
 
 

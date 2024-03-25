@@ -2,11 +2,10 @@ import openai  # pip install openai==0.28
 
 with open("APIKey.txt", "r") as textFile:
     api_key = textFile.read().strip()  # Personal OpenAI product key
-openAIModelVersion = "gpt-4"
 
 
 class TemplateModificationBot:
-    def __init__(self, api_key, model_version="gpt-4-turbo-preview"):
+    def __init__(self, api_key, model_version="gpt-3.5-turbo"):
         self.api_key = api_key
         self.model_version = model_version
         openai.api_key = self.api_key
@@ -20,7 +19,8 @@ class TemplateModificationBot:
                 :return: The modified HTML template.
                 """
 
-        combined_instructions = f"Original HTML:\n{original_html}\n\nModification Instructions:\n{modification_instructions}"
+        combined_instructions = (f"Original HTML:\n{original_html}\n"
+                                 f"\nModification Instructions:\n{modification_instructions}")
 
         response = openai.ChatCompletion.create(
             model=self.model_version,
@@ -29,12 +29,12 @@ class TemplateModificationBot:
                  "content": "You are a code generator. Your task is to modify a given HTML code based on the "
                             "instruction of the user without altering the rest of the code. Do not give any "
                             "explanations.Just generate HTML code based on instructions. For example, if the "
-                            "instruction was change the website name to 'My New Website', think about.html the appropriate "
-                            "places the website name should be in the code, add it and send the updated code back, "
-                            "with no explanation or text generation of any kind. Just perform the task and send the "
-                            "result."
-                            "Do not alter any part of the code linking to other pages. "
-                            "I repeat to not alter any other part of the code linking to other pages or files."},
+                            "instruction was change the website name to 'My New Website', think about.html "
+                            "the appropriate places the website name should be in the code, add it and send "
+                            "the updated code back, with no explanation or text generation of any kind. Just "
+                            "perform the task and send the result. Do not alter any part of the code linking "
+                            "to other pages. I repeat to not alter any other part of the code linking to other"
+                            " pages or files."},
                 {"role": "user", "content": combined_instructions}
             ],
             temperature=0.2,
@@ -57,7 +57,8 @@ class TemplateModificationBot:
           :return: The modified CSS template.
         """
 
-        combined_instructions = f"Original CSS:\n{original_css}\n\nModification Instructions:\n{modification_instructions}"
+        combined_instructions = (f"Original CSS:\n{original_css}\n"
+                                 f"\nModification Instructions:\n{modification_instructions}")
 
         response = openai.ChatCompletion.create(
             model=self.model_version,
@@ -166,14 +167,3 @@ class TextGenerationBot:
 
 
 text_bot = TextGenerationBot(api_key=api_key)
-
-"""# Example usage
-apiKey = api_key
-chatbot = TemplateModificationBot(apiKey)
-
-original_html = "<html><head><title>Example Site</title></head><body>Welcome to our site!</body></html>"
-modification_instructions = "Change the title to 'My New Website' and add a paragraph saying 'This is my updated website using AI.'"
-modified_html = chatbot.modify_html(original_html, modification_instructions)
-
-print("Original HTML:\n", original_html)
-print("\nModified HTML:\n", modified_html)"""

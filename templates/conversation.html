@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
-    <link rel="stylesheet" href="static/main_styles.css">
+    <link rel="stylesheet"  href="{{ url_for('static', filename='css_files/main_styles.css') }}">
     <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+    <script>
+        const userTemplateId = "{{ user_template_id }}";
+    </script>
 </head>
 <body>
     <div class="container">
@@ -25,10 +28,9 @@
             </div>
             <iframe id="previewFrame" src="about:blank"></iframe>
             <button id="reloadBtn" onclick="reloadPreview()">↻</button>
-            <button id="launchBtn">LAUNCH</button>
+            <button id="launchBtn">NEXT</button>
         </div>
     </div>
-
-    <script src="static/script.js"></script>
+<script src="{{ url_for('static', filename='js_files/script.js') }}"></script>
 </body>
 </html>

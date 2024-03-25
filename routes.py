@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, url_for, redirect, flash, session
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, current_user
 from werkzeug.security import check_password_hash
-from models import db, User, TemplateCategory, WebsiteTemplate
+from models import db, User, TemplateCategory, WebsiteTemplate, UserTemplate, UserTemplatePage
+from conversation_flows.flow_mapping import ConversationFlowMapping
+from classes import ServiceLocator
 
 # Create a Blueprint for your HTTP routes
 http_routes = Blueprint('http_routes', __name__)
@@ -85,27 +87,74 @@ def get_user_templates():
 
 
 @http_routes.route('/templates')
+@login_required
 def templates():
     categories = TemplateCategory.query.all()
     return render_template('templates.html', categories=categories)
 
 
 @http_routes.route('/conversation/<int:template_id>')
-def main():
+@login_required
+def conversation(template_id):
+    # Retrieve flow manager because we'd be using it here
+    flow_manager = ServiceLocator.get_service('flow_manager')
+    state_manager = ServiceLocator.get_service('state_manager')
+
     # Fetch the template from the database
-    template = WebsiteTemplate.query.get(id)
+    template = WebsiteTemplate.query.get(template_id)
     if template is None:
         return "Template not found", 404
 
+    # Fetch user id
+    user_id = current_user.id
+
+    # Then duplicate the template for the user
+    user_template = UserTemplate(
+        user_id=user_id,
+        original_template_id=template.id,
+        name=template.name,  # Allow users to rename
+        status='in progress'
+    )
+    db.session.add(user_template)
+    db.session.commit()
+
+    # Duplicate the pages of the template
+    for page in template.pages:
+        if template_id == page.template_id:
+            user_page = UserTemplatePage(
+                user_template_id=user_template.id,
+                page_name=page.page_name,
+                modified_html=page.html_content,
+                modified_css=page.css_content,
+                modified_js=page.js_content
+            )
+            db.session.add(user_page)
+    db.session.commit()
+
+    # Store the user's template id in state_manager
+    state_manager.store_data('user_template_id', user_template.id)
+
     # determine the conversation flow based on the template's category
-    conversation_flow = determine_conversation_flow(template.category.name)
+    category_name = template.category.name
+
+    # Use ConversationFlowMapping to get the appropriate conversation flow initializer
+    conversation_flow_initializer = ConversationFlowMapping.get_flow_initializer(category_name)
+
+    # Load the appropriate conversation flow the template falls under
+    if conversation_flow_initializer:
+        conversation_flow_initializer(flow_manager)
 
     # Render the conversation page, passing the template and conversation flow
-    return render_template('conversation.html', template=template, conversation_flow=conversation_flow)
+    return render_template('conversation.html', template=template, user_template_id=user_template.id)
 
 
-@http_routes.route('/builder', methods=['GET'])
-def builder():
-    return render_template("builder.html")
+@http_routes.route('/design_dashboard/<int:user_template_id>')
+@login_required
+def design_dashboard(user_template_id):
+    return render_template('design_dashboard.html', user_template_id=user_template_id)
+
+
+
+
 
 

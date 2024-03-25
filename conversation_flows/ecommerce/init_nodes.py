@@ -1,7 +1,7 @@
-from concrete_nodes import *
+from conversation_flows.ecommerce.ecommerce_flow import *
 
 
-def init_nodes(flow_manager):
+def init_ecommerce_nodes(flow_manager):
     # Define and add nodes
     welcome_node = WelcomeNode("WelcomeNode", "GetInformation")
     get_info_node = GetInformation("GetInformation", "CustomizeTemplate")

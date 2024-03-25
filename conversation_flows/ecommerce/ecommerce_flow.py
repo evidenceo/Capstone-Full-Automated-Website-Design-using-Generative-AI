@@ -1,9 +1,7 @@
 import json
 import random
 from classes import Node, ServiceLocator, DBUtils
-from models import db, Page
-from flask import current_app
-
+from models import UserTemplatePage
 
 # Implement specific conversation steps by extending 'Node' class
 
@@ -231,10 +229,10 @@ class CustomizeTemplate(Node):
 
     def process(self, state_manager, user_input=None):
 
-        template_id = state_manager.retrieve_data('template_id')
+        user_template_id = state_manager.retrieve_data('user_template_id')
 
         # Retrieve every page in the template
-        pages = Page.query.filter_by(template_id=template_id).all()
+        pages = UserTemplatePage.query.filter_by(user_template_id=user_template_id).all()
 
         for page in pages:
             if page.page_name == 'Home':
@@ -243,8 +241,8 @@ class CustomizeTemplate(Node):
             elif page.page_name == 'About':
                 page_name = 'About'
                 self.modify_template(state_manager, page_name, page)
-            elif page.page_name == 'Products':
-                page_name = 'Products'
+            elif page.page_name == 'Product':
+                page_name = 'Product'
                 self.modify_template(state_manager, page_name, page)
             elif page.page_name == 'Contact':
                 page_name = 'Contact'
@@ -264,11 +262,11 @@ class CustomizeTemplate(Node):
         product = state_manager.retrieve_data('product')
         business_goal = state_manager.retrieve_data('business_goal')
         design_elements = state_manager.retrieve_data('design_elements')
-        template_id = state_manager.retrieve_data('template_id')
+        user_template_id = state_manager.retrieve_data('user_template_id')
 
         # Get the page for modification
-        original_html = page.html_content
-        original_css = page.css_content
+        original_html = page.modified_html
+        original_css = page.modified_css
 
         modification_instructions_html = (f"Modify the {page_name} HTML template to incorporate the website's theme"
                                           f" around {website_name}, the products/services offered ({product}),"
@@ -285,7 +283,7 @@ class CustomizeTemplate(Node):
         updated_html = template_bot.modify_html(original_html, modification_instructions_html)
 
         # Update the modified template in the database
-        DBUtils.update_template_in_db(template_id, page.page_name, updated_html, 'html')
+        DBUtils.update_template_in_db(user_template_id, page.page_name, updated_html, 'html')
         print(f"updated_html: {updated_html}")  # Debug
 
         # Retrieve the metadata of the html webpage to give css AI context
@@ -304,7 +302,7 @@ class CustomizeTemplate(Node):
 
         updated_css = template_bot.modify_css(original_css, modification_instructions_css)
         # Update the modified template in the database
-        DBUtils.update_template_in_db(template_id, page.page_name, updated_css, 'css')
+        DBUtils.update_template_in_db(user_template_id, page.page_name, updated_css, 'css')
         print(f"updated_css: {updated_css}")  # Debug
 
         # Refresh iframe
@@ -380,13 +378,13 @@ class BasePageModification(Node):
 
             return {'message': message, 'response_type': response_type, 'buttons': buttons}
         else:
-            template_id = state_manager.retrieve_data('template_id')
+            user_template_id = state_manager.retrieve_data('user_template_id')
             page_name = self.page_name
 
             # Retrieve current page
-            current_page = Page.query.filter_by(template_id=template_id, page_name=page_name).first()
-            page_html = current_page.html_content
-            page_css = current_page.css_content
+            current_page = UserTemplatePage.query.filter_by(user_template_id=user_template_id, page_name=page_name).first()
+            page_html = current_page.modified_html
+            page_css = current_page.modified_css
 
             # Extract task from user input
             prompt_extraction = (
@@ -426,7 +424,7 @@ class BasePageModification(Node):
 
                     updated_html = template_bot.modify_html(page_html, modification_instructions_html)
                     # Update the modified template in the database
-                    DBUtils.update_template_in_db(template_id, page_name, updated_html, 'html')
+                    DBUtils.update_template_in_db(user_template_id, page_name, updated_html, 'html')
                     print(f"updated_html: {updated_html}")  # Debug
                 else:
                     print("No HTML changes requested. Skipping to CSS modifications.")
@@ -443,7 +441,7 @@ class BasePageModification(Node):
 
                 updated_css = template_bot.modify_css(page_css, modification_instructions_css)
                 # Update the modified template in the database
-                DBUtils.update_template_in_db(template_id, page_name, updated_css, 'css')
+                DBUtils.update_template_in_db(user_template_id, page_name, updated_css, 'css')
                 print(f"updated_css: {updated_css}")  # Debug
 
                 # Refresh iframe
@@ -485,7 +483,7 @@ class AboutPage(BasePageModification):
 
 class ProductPage(BasePageModification):
     def __init__(self, name, next_node='ContactPage', requires_input=True):
-        super().__init__(name, page_name='Products', next_node=next_node, requires_input=requires_input)
+        super().__init__(name, page_name='Product', next_node=next_node, requires_input=requires_input)
         self.skip_node = "ContactPage"
 
 

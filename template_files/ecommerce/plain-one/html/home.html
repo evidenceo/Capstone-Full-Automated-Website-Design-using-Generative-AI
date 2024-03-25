@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{website_name}</title>
-    <link rel="stylesheet" href="/template_files/ecommerce/plain-one/css/home_styles.css">
+     <link rel="stylesheet" href="/template_preview/css/{{user_template_id}}/{{page_name}}">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
              <ul>
                 <li><a href="#" onclick="navigateTo('Home')">Home</a></li>
                 <li><a href="#" onclick="navigateTo('About')">About Us</a></li>
-                <li><a href="#" onclick="navigateTo('Products')">Products</a></li>
+                <li><a href="#" onclick="navigateTo('Product')">Products</a></li>
                 <li><a href="#" onclick="navigateTo('Contact')">Contact Us</a></li>
             </ul>
         </nav>
@@ -67,6 +67,7 @@
         <p>&copy; 2024 My {website_name} Store. All rights reserved.</p>
     </div>
 </footer>
-
+<!-- Dynamically link to the JS file -->
+<script src="/template_preview/js/{{user_template_id}}/{{page_name}}"></script>
 </body>
 </html>
