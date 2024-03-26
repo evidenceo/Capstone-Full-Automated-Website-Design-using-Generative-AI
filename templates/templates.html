@@ -41,8 +41,6 @@
     <div class="main">
         <div class="main__container">
 
-
-
             <div class="container-mt4">
                 <h2 class="templates-h2">Templates</h2>
                 <div class="mb-3">
@@ -65,7 +63,7 @@
                                             <img src="#" class="card-img-top" alt="Template Image">
                                             <div class="card-body">
                                                 <h5 class="card-title">{{ template.name }}</h5>
-                                                <a href="{{ url_for('http_routes.templates', template_id=template.id) }}" class="btn btn-success">Modify</a>
+                                                <a href="{{ url_for('http_routes.conversation', template_id=template.id) }}" class="btn btn-success">Modify</a>
                                             </div>
                                         </div>
                                     </div>

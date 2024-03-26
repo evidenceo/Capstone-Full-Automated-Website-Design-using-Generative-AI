@@ -73,4 +73,4 @@ class UserTemplatePage(db.Model):
     modified_html = db.Column(db.Text)
     modified_css = db.Column(db.Text)
     modified_js = db.Column(db.Text)
-    # You could also add created_at and updated_at fields if needed
+

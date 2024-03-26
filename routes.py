@@ -68,19 +68,10 @@ def login():
 @http_routes.route('/user_dashboard')
 @login_required
 def user_dashboard():
-    # You would typically fetch user's templates from the database
-    user_templates = get_user_templates()  # This is a placeholder function
-    return render_template('user_dashboard.html', templates=user_templates)
-
-
-def get_user_templates():
-    # Placeholder function - you should implement database logic here
-    # From the database, if there are any modified templates in user section it should show here
-    return [
-        {'name': 'Template 1', 'thumbnail': 'path_to_image', 'edit_url': 'edit_template_url'},
-        {'name': 'Template 2', 'thumbnail': 'path_to_image', 'edit_url': 'edit_template_url'},
-        # Add as many templates as the user has
-    ]
+    # Fetch user id
+    user_id = current_user.id
+    user_templates = UserTemplate.query.filter_by(user_id=user_id).all()
+    return render_template('user_dashboard.html', user_templates=user_templates)
 
 
 @http_routes.route('/templates')
