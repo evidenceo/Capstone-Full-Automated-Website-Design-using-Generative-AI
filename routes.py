@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, url_for, redirect, flash, session
+from flask import Blueprint, render_template, request, url_for, redirect, jsonify, session, flash
 from flask_login import login_required, login_user, current_user
 from werkzeug.security import check_password_hash
 from models import db, User, TemplateCategory, WebsiteTemplate, UserTemplate, UserTemplatePage
@@ -11,27 +11,25 @@ http_routes = Blueprint('http_routes', __name__)
 
 @http_routes.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("home.html")
 
 
 @http_routes.route('/signup', methods=['GET', 'POST'])
 def signup():
     if 'user_id' in session:
-        flash('You are already logged in.', 'info')
-        return redirect(
-            url_for('http_routes.user_dashboard'))  # Change to the user dashboard page if user is already logged in
+        return jsonify({'error': 'You are already logged in.'}), 403
 
     if request.method == 'POST':
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        email = request.form['email']
-        password = request.form['password']
+        data = request.json
+        first_name = data['first_name']
+        last_name = data['last_name']
+        email = data['email']
+        password = data['password']
 
         # Check if user already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash('Email already in use.')
-            return redirect(url_for('http_routes.signup'))
+            return jsonify({'error': 'Email already in use.'}), 409
 
         new_user = User(first_name=first_name, last_name=last_name, email=email)
         new_user.set_password(password)  # Set password hash
@@ -39,10 +37,9 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Account created successfully!')
-        return redirect(url_for('http_routes.login'))  # Redirect to login page after signup
+        return jsonify({'success': 'Account created successfully!'}), 201
 
-    return render_template('signup.html')
+    return render_template('register.html')
 
 
 @http_routes.route('/login', methods=['GET', 'POST'])
@@ -87,7 +84,6 @@ def get_user_templates():
 
 
 @http_routes.route('/templates')
-@login_required
 def templates():
     categories = TemplateCategory.query.all()
     return render_template('templates.html', categories=categories)

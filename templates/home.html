@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELAA: Website Designer</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css_files/original_styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&family=Work+Sans:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&family=Poppins&family=Work+Sans:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar__container">
+            <a href="/" id="navbar__logo">ELAA</a>
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+                <li class="navbar__btn">
+                    <button onclick="window.location.href='/signup'" class="button">Login/Sign up</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<div class="main">
+    <div class="main__container">
+        <div class="main__content">
+            <h2>Design your very own website, <span class="auto-type"></span></h2>
+
+            <p>See how we've made website design efficient.</p>
+            <button class="main__btn" onclick="window.location.href='/signup'">Design now</button>
+        </div>
+
+        <div class="main__img--container">
+           <img src="static/web_images/undraw.svg" alt="pic" id="main__img"/>
+        </div>
+    </div>
+</div>
+
+<div class="feature-section">
+    <h2>Features</h2>
+    <p>View what's available through ELAA. </p>
+    <div class="features">
+        <div class="feature-container">
+            <img src="static/web_images/nounpro.png" alt="Icon 1">
+            <h3>Interactive Chatbot</h3>
+            <p>Designing a website doesn't have to be a solo task - converse with a chatbot to design your website, who will be with you every step of the way.</p>
+        </div>
+        <div class="feature-container">
+            <img src="static/web_images/browser.png" alt="Icon 2">
+            <h3>View instant changes</h3>
+            <p>View the changes made as you design your website using our viewport which displays your design as you progress through the process.</p>
+        </div>
+        <div class="feature-container">
+            <img src="static/web_images/folder.png" alt="Icon 3">
+            <h3>Variety of templates</h3>
+            <p>We have a variety of templates ranging from blogs, business, personal websites, and more.</p>
+        </div>
+
+    </div>
+</div>
+
+<div class="services">
+    <h1>See what ELAA has to offer.</h1>
+    <div class="services__container">
+        <div class="services__card">
+            <h2>Experience Generative AI like never before.</h2>
+            <p>Our conversational chatbot makes sure your feedback is always heard.</p>
+            <a href="#"><button>Start designing</button></a>
+        </div>
+
+        <div class="services__card">
+            <h2>Your website has a perfect fit: we can help you find it.</h2>
+            <p>Browse our selection of templates that fit your website.</p>
+            <a href="templates.html"><button>View templates</button></a>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+<script>
+    var typed = new Typed(".auto-type", {
+        strings: ["right at your fingertips.", "with the power of conversational AI.", "in just a few minutes."],
+        typeSpeed: 230,
+        backSpeed: 230,
+        loop: true
+    })
+</script>
+<script src="static/js_files/home.js"></script>
+
+</body>
+</html>
