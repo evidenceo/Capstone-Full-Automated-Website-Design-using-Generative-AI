@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Design Dashboard</title>
+    <!-- Froala Editor CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
+    <!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
+    <!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
+    <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest//css/froala_style.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body data-user-template-id="{{ user_template_id }}">
+    <div id="editor"></div> <!-- Froala editor container -->
+
+    <!-- Initialize the editor. -->
+    <script>
+        var editor = new FroalaEditor('#editor');
+    </script>
+
+    <!-- Froala Editor JS -->
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js'></script>
+    <!-- Custom Script -->
+    <script src="{{ url_for('static', filename='js_files/design_dasboard.js') }}"></script>
+
+</body>
+</html>

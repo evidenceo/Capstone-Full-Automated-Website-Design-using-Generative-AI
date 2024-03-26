@@ -1,0 +1,42 @@
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding: 20px;
+    gap: 20px;
+}
+
+#editor {
+    height: 300px;
+    width: 80%;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 5px #ccc;
+}
+
+input[type="color"] {
+    padding: 5px;
+    width: 100px;
+}
+
+.dropzone {
+    border: 2px dashed #0087F7;
+    border-radius: 5px;
+    background: white;
+    padding: 20px;
+    width: 80%;
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
+}
+
+.dropzone:hover {
+    background: #f8f9fa;
+}
+
+/* Adjust the size and padding as needed */
+.dropzone .dz-message {
+    font-size: 1.25rem;
+    margin: 2em 0;
+}
