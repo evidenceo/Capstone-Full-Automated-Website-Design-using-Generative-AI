@@ -81,7 +81,7 @@ def template_customize_html(user_template_id, page_name):
     return "Template not found", 404
 
 
-@template_blueprint.route('/template_preview/css/<int:user_template_id>/<page_name>')
+@template_blueprint.route('/template_customize/css/<int:user_template_id>/<page_name>')
 def template_customize_css(user_template_id, page_name):
     # Fetch the user template from the database
     user_template = UserTemplate.query.get(user_template_id)
@@ -93,7 +93,7 @@ def template_customize_css(user_template_id, page_name):
     return "Template not found", 404
 
 
-@template_blueprint.route('/template_preview/js/<int:user_template_id>/<page_name>')
+@template_blueprint.route('/template_customize/js/<int:user_template_id>/<page_name>')
 def template_customize_js(user_template_id, page_name):
     # Fetch the user template from the database
     user_template = UserTemplate.query.get(user_template_id)
@@ -103,4 +103,23 @@ def template_customize_js(user_template_id, page_name):
             return Response(page.modified_js, mimetype='application/javascript')
         return "Page not found", 404
     return "Template not found", 404
+
+@template_blueprint.route('/template/pages/<int:user_template_id>')
+def get_template_pages(user_template_id):
+    # Fetch the user template from the database
+    user_template = UserTemplate.query.get(user_template_id)
+    if user_template:
+        # Fetch all the pages in db
+        pages = UserTemplatePage.query.filter_by(user_template_id=user_template_id).all()
+
+        # Extract the page names in a list
+        available_pages = [page.page_name for page in pages]
+
+        # Return the list of page names in JSON
+        return jsonify(available_pages)
+    else:
+        return jsonify({'error': 'Template not found'}), 404
+
+
+
 
