@@ -172,18 +172,8 @@ function clearButtons() {
 // This is to load the template into the iframe
 document.addEventListener('DOMContentLoaded', function() {
     loadTemplatePage('Home');
-
-    // Handle the server response with the template information
-    socket.on('template_response', function(data) {
-        if (data.templateId && data.initialPageContent) {
-            // Store the templateId in local storage
-            localStorage.setItem('currentTemplateId', data.templateId);
-            loadPageContent('Home');
-        } else {
-            console.error('Error fetching template:', data.error);
-            // Handle error, such as showing a notification to the user
-        }
-    });
+    // Store the templateId in local storage
+    localStorage.setItem('currentTemplateId', data.templateId);
 });
 
 
