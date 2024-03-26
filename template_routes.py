@@ -1,5 +1,10 @@
-from flask import Blueprint, render_template, Response, make_response,jsonify
+import os.path
+
+from flask import Blueprint, render_template, Response, make_response, jsonify, request, current_app, url_for
 from models import UserTemplate, UserTemplatePage
+from werkzeug.utils import secure_filename
+from flask_login import current_user
+from classes import DBUtils
 
 template_blueprint = Blueprint('template_blueprint', __name__)
 
@@ -104,6 +109,7 @@ def template_customize_js(user_template_id, page_name):
         return "Page not found", 404
     return "Template not found", 404
 
+
 @template_blueprint.route('/template/pages/<int:user_template_id>')
 def get_template_pages(user_template_id):
     # Fetch the user template from the database
@@ -121,5 +127,37 @@ def get_template_pages(user_template_id):
         return jsonify({'error': 'Template not found'}), 404
 
 
+@template_blueprint.route('/file-upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify(error='No file part'), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify(error='No selected file'), 400
+    if file:
+        user_id = current_user.get_id()
+        user_template_id = request.form.get('user_template_id')
+        user_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user_id), str(user_template_id))
+        if not os.path.exists(user_folder):
+            os.makedirs(user_folder)
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(user_folder, filename)
+        file.save(file_path)
+
+        file_relative_path = url_for('static', filename=f'uploads/{user_id}/{user_template_id}/{filename}', _external=True)
+        return jsonify(success=True, message="File uploaded successfully", link=file_relative_path)
 
 
+@template_blueprint.route('/save_page/<int:user_template_id>/<page_name>', methods=['POST'])
+def save_page(user_template_id, page_name):
+    if not request.json or 'html' not in request.json:
+        return jsonify({'error': 'Invalid request'}), 400
+
+    updated_html = request.json['html']
+
+    try:
+        # Use DBUtils to update the page content
+        DBUtils.update_template_in_db(user_template_id, page_name, updated_html, 'html')
+        return jsonify({'success': True, 'message': 'Page updated successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 404

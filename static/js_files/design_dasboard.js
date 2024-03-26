@@ -1,39 +1,33 @@
+let editorWrapper = {
+    editor: null,
+    currentPageName: 'Home'
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const userTemplateId = document.body.getAttribute('data-user-template-id');
-    const pageName = 'Home';
     console.log(userTemplateId);
 
     fetch(`/template/pages/${userTemplateId}`)
         .then(response => response.json())
         .then(availablePages => {
-            initializeFroalaEditor(userTemplateId, availablePages, pageName);
+            initializeFroalaEditor(userTemplateId, availablePages);
         })
         .catch(error => console.error('Error fetching available pages:', error));
 });
 
-function initializeFroalaEditor(userTemplateId, availablePages, pageName) {
+function initializeFroalaEditor(userTemplateId, availablePages) {
     const dropdownOptions = availablePages.reduce((options, page) => {
         options[page] = page;
         return options;
     }, {});
 
-    FroalaEditor.DefineIcon('pageSelector', {NAME: 'list'});
-    FroalaEditor.RegisterCommand('pageSelector', {
-        title: 'Select Page',
-        type: 'dropdown',
-        focus: false,
-        undo: false,
-        refreshAfterCallback: true,
-        options: dropdownOptions,
-        callback: function (cmd, val) {
-            loadTemplate(userTemplateId, val, this);
-        }
-    });
-
     const editor = new FroalaEditor('#editor', {
         toolbarButtons: ['insertImage', 'codeView', 'color', 'textColor', 'backgroundColor', 'pageSelector', '|', 'bold', 'italic', 'underline', 'html'],
         imageUploadURL: '/file-upload',
-        imageUploadParams: { id: 'editor' },
+        imageUploadParams: {
+            id: 'editor',
+            user_template_id: userTemplateId
+        },
         codeViewOptions: {
             codeMirror: true,
             codeMirrorOptions: {
@@ -49,7 +43,8 @@ function initializeFroalaEditor(userTemplateId, availablePages, pageName) {
         },
         events: {
             'initialized': function () {
-                loadTemplate(userTemplateId, pageName, this);
+                editorWrapper.editor = this;
+                loadTemplate(userTemplateId, editorWrapper.currentPageName, this);
             },
             'image.uploaded': function (response) {
                 console.log('Image uploaded response:', response);
@@ -63,25 +58,46 @@ function initializeFroalaEditor(userTemplateId, availablePages, pageName) {
         }
     });
 
-    setupEventListeners(editor, userTemplateId, pageName);
+    FroalaEditor.DefineIcon('pageSelector', {NAME: 'list'});
+    FroalaEditor.RegisterCommand('pageSelector', {
+        title: 'Select Page',
+        type: 'dropdown',
+        focus: false,
+        undo: false,
+        refreshAfterCallback: true,
+        options: dropdownOptions,
+        callback: function (cmd, val) {
+            editorWrapper.currentPageName = val;
+            if (editorWrapper.editor) {
+                loadTemplate(userTemplateId, val, editorWrapper.editor);
+            }
+        }
+    });
+
+    setupEventListeners(userTemplateId);
 }
 
-function loadTemplate(userTemplateId, pageName, editorInstance) {
-    const pageUrl = `/template_customize/html/${userTemplateId}/${pageName}`;
+function loadTemplate(userTemplateId, currentPageName, editorInstance) {
+    const pageUrl = `/template_customize/html/${userTemplateId}/${currentPageName}`;
     fetch(pageUrl)
         .then(response => response.text())
         .then(html => {
-            editorInstance.html.set(html);
+            if (editorInstance) {
+                editorInstance.html.set(html);
+            } else {
+                console.error("Editor instance is not available.");
+            }
         })
         .catch(error => console.error('Error loading template:', error));
 }
 
-function setupEventListeners(editor, userTemplateId, pageName) {
+function setupEventListeners(userTemplateId) {
     const saveButton = document.getElementById('saveButton');
     if (saveButton) {
         saveButton.addEventListener('click', function() {
-            const updatedHtml = editor.html.get();
-            fetch(`/save_template/${userTemplateId}`, {
+            const updatedHtml = editorWrapper.editor.html.get();
+           // Use editor.currentPageName which holds the updated current page name
+            fetch(`/save_page/${userTemplateId}/${editorWrapper.currentPageName}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ html: updatedHtml })
@@ -89,6 +105,7 @@ function setupEventListeners(editor, userTemplateId, pageName) {
             .then(response => response.json())
             .then(data => {
                 console.log('Template saved:', data);
+                console.log(editor.currentPageName)
             })
             .catch(error => {
                 console.error('Error saving template:', error);

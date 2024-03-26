@@ -6,13 +6,16 @@
     <!-- Froala Editor CSS -->
     <link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
     <!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
-    <!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
     <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest//css/froala_style.min.css" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body data-user-template-id="{{ user_template_id }}">
-    <div id="editor"></div> <!-- Froala editor container -->
+    <div id="editor-container">
+        <div id="editor"></div> <!-- Froala editor container -->
+        <button id="saveButton" class="save-btn">Save Changes </button>
+    </div>
+
 
     <!-- Initialize the editor. -->
     <script>

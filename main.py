@@ -36,6 +36,9 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)  # Initialize the database with the Flask app
 
+    # Configure folder for uploading images as part of the app instance
+    app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
+
     # Initialize flow and state manager
     state_manager = StateManager()
     flow_manager = FlowManager(app, state_manager, socketio)
