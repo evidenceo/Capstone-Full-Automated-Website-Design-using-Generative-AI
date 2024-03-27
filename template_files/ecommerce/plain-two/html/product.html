@@ -4,20 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Ecommerce - Products</title>
-    <link rel="stylesheet" href="/template_files/ecommerce/plain-two/css/product_styles.css">
+    <title>{website_name}</title>
+    <link rel="stylesheet" href="/template_preview/css/{{user_template_id}}/{{page_name}}">
 </head>
 
 <body>
 
     <!-- Header -->
     <header>
-        <h1>Modern Ecommerce</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="products.html">Products</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+        <h1>{website_name}</h1>
+         <nav>
+            <!--navigation bar containing links to different pages-->
+             <ul>
+                <li><a href="#" onclick="navigateTo('Home')">Home</a></li>
+                <li><a href="#" onclick="navigateTo('About')">About Us</a></li>
+                <li><a href="#" onclick="navigateTo('Product')">Products</a></li>
+                <li><a href="#" onclick="navigateTo('Contact')">Contact Us</a></li>
+            </ul>
         </nav>
     </header>
 
@@ -28,19 +31,19 @@
         <section class="products">
             <h2>Our Products</h2>
             <div class="product">
-                <img src="https://via.placeholder.com/200x200" alt="Product Image">
+                <img src="#" alt="Product Image">
                 <h3>Product Name</h3>
                 <p>$99.99</p>
                 <button>Add to Cart</button>
             </div>
             <div class="product">
-                <img src="https://via.placeholder.com/200x200" alt="Product Image">
+                <img src="#" alt="Product Image">
                 <h3>Product Name</h3>
                 <p>$79.99</p>
                 <button>Add to Cart</button>
             </div>
             <div class="product">
-                <img src="https://via.placeholder.com/200x200" alt="Product Image">
+                <img src="#" alt="Product Image">
                 <h3>Product Name</h3>
                 <p>$149.99</p>
                 <button>Add to Cart</button>
@@ -51,8 +54,10 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Modern Ecommerce. All rights reserved.</p>
+        <p>&copy; 2024 {website_name} All rights reserved.</p>
     </footer>
+
+    <script src="/template_preview/js/{{user_template_id}}/{{page_name}}"></script>
 
 </body>
 

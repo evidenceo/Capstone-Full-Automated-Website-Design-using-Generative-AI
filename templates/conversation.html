@@ -5,15 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
     <link rel="stylesheet"  href="{{ url_for('static', filename='css_files/main_styles.css') }}">
+    <link rel="stylesheet"  href="{{ url_for('static', filename='css_files/original_styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&family=Poppins&family=Work+Sans:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
     <script>
         const userTemplateId = "{{ user_template_id }}";
     </script>
 </head>
 <body>
+ <nav class="navbar">
+        <div class="navbar__container">
+            <a href="home.html" id="navbar__logo">ELAA</a>
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+
+                <li class="navbar__btn2">
+                    <a href="{{ url_for('http_routes.user_dashboard') }}" class="button">
+                    User Dashboard
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <div class="chat-container">
-            <div class="chat-history" id="chatHistory">
+            <div class="chat-history" id="chatHistory" font-colour="0000">
                 <!-- Chat messages will be appended here -->
             </div>
             <div class="chat-input-container">
@@ -33,7 +55,6 @@
             <iframe id="previewFrame" src="about:blank" class="loader">
                 <!-- Preview iframe -->
             </iframe>
-            <button id="reloadBtn" onclick="reloadPreview()">↻</button>
             <button id="launchBtn" onclick="window.location.href='/design_dashboard/{{ user_template_id }}';">NEXT</button>
 
         </div>

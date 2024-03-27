@@ -4,20 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Ecommerce</title>
-    <link rel="stylesheet" href="/template_files/ecommerce/plain-two/css/home_styles.css">
+    <title>{website_name}</title>
+    <link rel="stylesheet" href="/template_preview/css/{{user_template_id}}/{{page_name}}">
 </head>
 
 <body>
 
     <!-- Header -->
     <header>
-        <h1>Modern Ecommerce</h1>
+        <h1>{website_name}</h1>
         <nav>
-            <a href="#">Home</a>
-            <a href="#">Products</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+            <!--navigation bar containing links to different pages-->
+             <ul>
+                <li><a href="#" onclick="navigateTo('Home')">Home</a></li>
+                <li><a href="#" onclick="navigateTo('About')">About Us</a></li>
+                <li><a href="#" onclick="navigateTo('Product')">Products</a></li>
+                <li><a href="#" onclick="navigateTo('Contact')">Contact Us</a></li>
+            </ul>
         </nav>
     </header>
 
@@ -27,7 +30,7 @@
         <!-- Hero Section -->
         <div class="hero">
             <div>
-                <h1>Welcome to Modern Ecommerce</h1>
+                <h1>Welcome to {website_name}</h1>
                 <p>Your one-stop destination for modern products</p>
             </div>
         </div>
@@ -52,8 +55,10 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Modern Ecommerce. All rights reserved.</p>
+        <p>&copy; 2024 {website_name}. All rights reserved.</p>
     </footer>
+
+    <script src="/template_preview/js/{{user_template_id}}/{{page_name}}"></script>
 
 </body>
 

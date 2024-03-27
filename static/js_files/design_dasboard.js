@@ -113,3 +113,30 @@ function setupEventListeners(userTemplateId) {
         });
     }
 }
+
+document.getElementById('publishButton').addEventListener('click', function() {
+    const userTemplateId = document.body.getAttribute('data-user-template-id');
+    window.fetch(`/download_template/${userTemplateId}`)
+    .then(response => {
+        if (response.ok) {
+            return response.blob();
+        }
+        throw new Error('Download failed');
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "template.zip";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        alert('Download successful!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Download failed');
+    });
+});
+

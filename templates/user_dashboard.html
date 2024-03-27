@@ -14,9 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&family=Work+Sans:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&family=Poppins&family=Work+Sans:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
-    <script>
-        const userTemplateId = "{{ user_template_id }}";
-    </script>
 </head>
 <body>
     <nav class="navbar">
@@ -35,25 +32,28 @@
         </div>
     </nav>
 
+
     <div class="main">
-        <div class="main__container">
-            <h2 class="templates-h2">User Dashboard</h2>
-            <div class="row">
-                <!-- This is where the user's templates will be displayed. Loop through user templates -->
-                {% for user_template in user_templates %}
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="#" class="card-img-top" alt="Template Image">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ user_template.name }}</h5>
-                                <button class="btn btn-success" onclick="window.location.href='/design_dashboard/{{ user_template.id }}';">Edit</button>
-                            </div>
+    <div class="dashboardheader">
+        <h2 class="templates1-h2">User Dashboard</h2>
+    </div>
+    <div class="main__container">
+        <div class="row">
+            <!-- This is where the user's templates will be displayed. Loop through user templates -->
+            {% for user_template in user_templates %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="#" class="card-img-top" alt="Template Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ user_template.name }}</h5>
+                            <a href="{{ url_for('http_routes.design_dashboard', user_template_id=user_template.id) }}" class="btn btn-success">Edit</a>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>

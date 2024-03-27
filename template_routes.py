@@ -1,9 +1,10 @@
 import os.path
 
-from flask import Blueprint, render_template, Response, make_response, jsonify, request, current_app, url_for
+from flask import Blueprint, render_template, Response, make_response, jsonify, request, current_app, url_for, send_file
 from models import UserTemplate, UserTemplatePage
 from werkzeug.utils import secure_filename
 from flask_login import current_user
+from zipfile import ZipFile
 from classes import DBUtils
 
 template_blueprint = Blueprint('template_blueprint', __name__)
@@ -161,3 +162,30 @@ def save_page(user_template_id, page_name):
         return jsonify({'success': True, 'message': 'Page updated successfully'})
     except Exception as e:
         return jsonify({'error': str(e)}), 404
+
+
+@template_blueprint.route('/download_template/<int:user_template_id>')
+def download_template(user_template_id):
+    user_template = UserTemplate.query.get_or_404(user_template_id)
+    if user_template.user_id != current_user.id:
+        return jsonify(error="Unauthorized access"), 403
+
+    # Create a temporary zip file
+    temp_dir = os.path.join('temp', str(user_template_id))
+    os.makedirs(temp_dir, exist_ok=True)
+    zip_path = os.path.join(temp_dir, 'template.zip')
+
+    with ZipFile(zip_path, 'w') as zipf:
+        # For each page in the template, create an HTML file and add it to the zip
+        for page in user_template.pages:
+            html_path = os.path.join(temp_dir, f"{page.page_name}.html")
+            with open(html_path, 'w') as file:
+                file.write(page.modified_html)
+            zipf.write(html_path, arcname=f"{page.page_name}.html")
+            css_path = os.path.join(temp_dir, f"{page.page_name}.css")
+            with open(css_path, 'w') as file:
+                file.write(page.modified_css)
+            zipf.write(css_path, arcname=f"{page.page_name}.css")
+
+    return send_file(zip_path, as_attachment=True, download_name=f"{user_template.name}.zip")
+

@@ -7,15 +7,37 @@
     <link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
     <!-- CSS rules for styling the element inside the editor such as p, h1, h2, etc. -->
     <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest//css/froala_style.min.css" rel="stylesheet" type="text/css" />
-
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css_files/original_styles.css') }}">
 </head>
 
 <body data-user-template-id="{{ user_template_id }}">
+  <nav class="navbar">
+        <div class="navbar__container">
+            <a href="home.html" id="navbar__logo">ELAA</a>
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+
+                <li class="navbar__btn2">
+                    <a href="{{ url_for('http_routes.user_dashboard') }}" class="button">
+                    User Dashboard
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<div class="publishbtn-container">
+  <button id="publishButton" class="publish-btn">Export</button>
+</div>
     <div id="editor-container">
         <div id="editor"></div> <!-- Froala editor container -->
-        <button id="saveButton" class="save-btn">Save Changes </button>
     </div>
-
+    <div>
+        <button id="saveButton" class="button">Save Changes </button>
+    </div>
 
     <!-- Initialize the editor. -->
     <script>

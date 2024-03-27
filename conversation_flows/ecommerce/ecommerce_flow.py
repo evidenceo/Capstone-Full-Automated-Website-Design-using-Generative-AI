@@ -388,6 +388,9 @@ class BasePageModification(Node):
             user_template_id = state_manager.retrieve_data('user_template_id')
             page_name = self.page_name
 
+            # Start event to show loading indicator
+            socketio.emit('show_loading', {'message': 'Customizing your template...'}, namespace='/')
+
             # Retrieve current page
             current_page = UserTemplatePage.query.filter_by(user_template_id=user_template_id, page_name=page_name).first()
             page_html = current_page.modified_html
@@ -453,6 +456,9 @@ class BasePageModification(Node):
 
                 # Refresh iframe
                 socketio.emit('refresh_iframe')  # Finsh loading
+
+                # Stop loading
+                socketio.emit('hide_loading', {'message': 'Customization complete'}, namespace='/')
 
                 state_manager.set_current_step("finalize_interaction")
                 return self.process(state_manager)
