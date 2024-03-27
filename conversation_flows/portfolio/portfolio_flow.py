@@ -110,7 +110,7 @@ class GetInformation(Node):
 
             # extract info from user input
             prompt_extraction = (
-                f"Given {last_system_message} and {user_input}. Extract the product the user sells from the "
+                f"Given {last_system_message} and {user_input}. Extract the portfolio theme from the "
                 f"information and save in JSON format. Only output JSON format result without any additional"
                 f"explanation or text.")
             get_portfolio_theme = text_bot.extraction(prompt_extraction)
@@ -328,7 +328,7 @@ class DetermineNextStep(Node):
             return {'action': action, 'message': message, 'buttons': buttons, 'response_type': response_type}
         else:
             if user_input == 'continue':
-                next_node = 'HomePage'
+                next_node = 'CustomizeTwice'
                 auto_progress = True
 
                 return {'next_node': next_node, 'auto_progress': auto_progress}

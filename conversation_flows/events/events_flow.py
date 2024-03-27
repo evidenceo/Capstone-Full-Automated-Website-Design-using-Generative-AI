@@ -49,7 +49,6 @@ class GetInformation(Node):
             message_options = [
                 "What would you like to name your website?",
                 "Please provide a name for your website.",
-                "What would you like to name your portfolio website?"
             ]
 
             # pick a random message
@@ -82,7 +81,7 @@ class GetInformation(Node):
             state_manager.store_data('website_name', get_website_name)
 
             # move to the next step
-            state_manager.set_current_step("get_portfolio_theme")
+            state_manager.set_current_step("get_event_theme")
             return self.process(state_manager)
 
     def get_event_theme(self, state_manager, user_input):
@@ -110,7 +109,7 @@ class GetInformation(Node):
 
             # extract info from user input
             prompt_extraction = (
-                f"Given {last_system_message} and {user_input}. Extract the product the user sells from the "
+                f"Given {last_system_message} and {user_input}. Extract the event the user is hosting from the "
                 f"information and save in JSON format. Only output JSON format result without any additional"
                 f"explanation or text.")
             get_event_theme = text_bot.extraction(prompt_extraction)
@@ -153,7 +152,7 @@ class GetInformation(Node):
             print(f"prompt_extraction: {get_event_goals}")  # debug
 
             # save the input
-            state_manager.store_data('professional_goals', get_event_goals)
+            state_manager.store_data('event_goals', get_event_goals)
 
             state_manager.set_current_step("get_design_elements")
             return self.process(state_manager)
@@ -255,8 +254,8 @@ class CustomizeTemplate(Node):
 
         # Get all the information i need
         website_name = state_manager.retrieve_data('website_name')
-        product = state_manager.retrieve_data('product')
-        business_goal = state_manager.retrieve_data('business_goal')
+        event_theme = state_manager.retrieve_data('event_theme')
+        event_goals = state_manager.retrieve_data('event_goals')
         design_elements = state_manager.retrieve_data('design_elements')
         user_template_id = state_manager.retrieve_data('user_template_id')
 
@@ -265,8 +264,8 @@ class CustomizeTemplate(Node):
         original_css = page.modified_css
 
         modification_instructions_html = (f"Modify the HTML template to incorporate the website's theme"
-                                          f" around {website_name}, the products/services offered ({product}),"
-                                          f" and the business goals ({business_goal}). Enhance the layout to reflect"
+                                          f" around {website_name}, the type of event ({event_theme}),"
+                                          f" and the event goals ({event_goals}). Enhance the layout to reflect"
                                           f" the {design_elements} theme, using HTML5 semantic elements for a rich,"
                                           f" interactive user experience. Prepare the layout for dynamic CSS effects as"
                                           f" described in {design_elements}, with comments indicating where these "
@@ -286,14 +285,15 @@ class CustomizeTemplate(Node):
         metadata = template_bot.get_metadata(updated_html)
 
         # Then do css
-        modification_instructions_css = (f"Create a cohesive CSS stylesheet an event HTML page that embodies the"
+        modification_instructions_css = (f"Modify the CSS stylesheet given for an event HTML page that embodies the"
                                          f" {design_elements} theme, with special attention to {metadata} instructions."
                                          f" Utilize modern CSS techniques to bring the design elements to life, "
                                          f"ensuring consistency across the website. Apply styles according to the"
                                          f" metadata guidelines, focusing on animations, gradients, and responsive"
                                          f" design features that enhance the visual appeal and user experience. Aim for"
                                          f" a balance between creativity and usability, ensuring the site remains"
-                                         f" accessible and performs well across devices."
+                                         f" accessible and performs well across devices. Make sure styles are applied"
+                                         f" to all classes in the stylesheet."
                                          )
 
         updated_css = template_bot.modify_css(original_css, modification_instructions_css)
@@ -328,7 +328,7 @@ class DetermineNextStep(Node):
             return {'action': action, 'message': message, 'buttons': buttons, 'response_type': response_type}
         else:
             if user_input == 'continue':
-                next_node = 'HomePage'
+                next_node = 'CustomizeTwice'
                 auto_progress = True
 
                 return {'next_node': next_node, 'auto_progress': auto_progress}
@@ -388,11 +388,14 @@ class CustomizeTwice(Node):
             # Extract task from user input
             prompt_extraction = (
                 f"Given the user's request to modify the website, categorize the changes that should be applied to the "
-                f"HTML structure and those that should be applied through CSS styling. Organize the tasks under two "
+                f"HTML structure and those that should be applied through CSS styling. Bear in mind that there is a "
+                f"template already and you'd just be making modifications to it so try to organize the task to make "
+                f"use of what is already in the template. Organize the tasks under two "
                 f"categories: 'html_change_request' for changes in the HTML structure and "
                 f"'css_change_request' for styling changes. Format the output as JSON with these two keys, providing"
                 f" detailed instructions under each category based on the user's request."
-                f"User request: {user_input}. Please generate the categorized tasks in JSON format."
+                f"User request: {user_input}. Please generate the categorized tasks in JSON format. Do not provide any"
+                f"explanations or additional text. Thank you. "
             )
 
             design_update_json = text_bot.extraction(prompt_extraction)

@@ -7,7 +7,7 @@ class ConversationFlowMapping:
     mapping = {
         'ecommerce': init_ecommerce_nodes,
         'portfolio': init_portfolio_nodes,
-        'events': init_ecommerce_nodes
+        'events': init_events_nodes
     }
 
     @staticmethod

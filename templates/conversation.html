@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
     <link rel="stylesheet"  href="{{ url_for('static', filename='css_files/main_styles.css') }}">
-    <link rel="stylesheet"  href="{{ url_for('static', filename='css_files/original_styles.css') }}">
+    <!-- <link rel="stylesheet"  href="{{ url_for('static', filename='css_files/original_styles.css') }}"> -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&family=Poppins&family=Work+Sans:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
      <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,7 +40,7 @@
             </div>
             <div class="chat-input-container">
                 <input type="text" id="chatInput" placeholder="Type here...">
-                <button id="sendBtn">Send</button>
+                <button id="sendBtn" class="chat-button">Send</button>
             </div>
         </div>
 
@@ -55,9 +55,11 @@
             <iframe id="previewFrame" src="about:blank" class="loader">
                 <!-- Preview iframe -->
             </iframe>
-            <button id="launchBtn" onclick="window.location.href='/design_dashboard/{{ user_template_id }}';">NEXT</button>
-
+            <div>
+            <button id="launchBtn" onclick="window.location.href='/design_dashboard/{{ user_template_id }}';" class="chat-button">NEXT</button>
+            </div>
         </div>
+
     </div>
 <script src="{{ url_for('static', filename='js_files/script.js') }}"></script>
 </body>

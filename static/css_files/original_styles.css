@@ -515,9 +515,9 @@ height: 80px;
     height: 100px;
 }
 
-.feature-container img[src="browser.png"],
-.feature-container img[src="folder.png"],
-.feature-container img[src="nounpro.png"] {
+.feature-container img[src="static/web_images/browser.png"],
+.feature-container img[src="static/web_images/folder.png"],
+.feature-container img[src="static/web_images/nounpro.png"] {
     margin-bottom: 20px;
     width: 80px;  
     height: 80px; 
@@ -848,6 +848,8 @@ margin-bottom:5px;
     background: #4ad4b6;
     color: #fff;
     }
+
+
 
 
 

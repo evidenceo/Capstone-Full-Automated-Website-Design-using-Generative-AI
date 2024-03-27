@@ -24,6 +24,7 @@ function initializeFroalaEditor(userTemplateId, availablePages) {
     const editor = new FroalaEditor('#editor', {
         toolbarButtons: ['insertImage', 'codeView', 'color', 'textColor', 'backgroundColor', 'pageSelector', '|', 'bold', 'italic', 'underline', 'html'],
         imageUploadURL: '/file-upload',
+        iframe: true,
         imageUploadParams: {
             id: 'editor',
             user_template_id: userTemplateId
