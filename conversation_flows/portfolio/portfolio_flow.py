@@ -1,4 +1,3 @@
-import json
 import random
 from classes import Node, ServiceLocator, DBUtils
 from models import Page
@@ -234,8 +233,6 @@ class CustomizeTemplate(Node):
         if page:
             page_name = 'Home'
             self.modify_template(state_manager, page_name, page)
-
-
 
         next_node = 'DetermineNextStep'
         auto_progress = True

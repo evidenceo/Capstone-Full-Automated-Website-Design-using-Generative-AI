@@ -1,6 +1,3 @@
-from flask_socketio import emit
-from models import WebsiteTemplate, Page
-
 
 def register_socketio_events(socketio, state_manager, flow_manager):
     @socketio.on('start_conversation')

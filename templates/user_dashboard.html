@@ -14,6 +14,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&family=Work+Sans:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&family=Noto+Sans:ital@0;1&family=Poppins&family=Work+Sans:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+    <script>
+        const userTemplateId = "{{ user_template_id }}";
+    </script>
 </head>
 <body>
     <nav class="navbar">
@@ -43,7 +46,7 @@
                             <img src="#" class="card-img-top" alt="Template Image">
                             <div class="card-body">
                                 <h5 class="card-title">{{ user_template.name }}</h5>
-                                <a href="#" class="btn btn-success">Edit</a>
+                                <button class="btn btn-success" onclick="window.location.href='/design_dashboard/{{ user_template.id }}';">Edit</button>
                             </div>
                         </div>
                     </div>

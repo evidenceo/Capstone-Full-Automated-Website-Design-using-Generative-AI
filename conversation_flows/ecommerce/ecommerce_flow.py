@@ -165,11 +165,11 @@ class GetInformation(Node):
         text_bot = ServiceLocator.get_service('text_bot')
         if user_input is None:
             message_options = [
-                "Almost there!\n If you already have specific colors in mind for your website, please feel free to "
-                "provide them. Otherwise, would you like elaa to suggest a color scheme based on your preferences?",
+                "Almost there!\n Do you have any specific design elements in mind for your website? Or would you like"
+                " elaa to choose them based on your preferences?",
 
-                "Final Round!\nFeel free to share any preferred colors you have in mind for your website. "
-                "Alternatively, would you like elaa to propose a color scheme based on your preferences?"
+                "We're nearly finished! Would you like to suggest any particular design elements for your website, or "
+                "would you prefer elaa to select them according to your preferences?"
             ]
 
             # pick a random message
@@ -228,8 +228,12 @@ class CustomizeTemplate(Node):
         super().__init__(name, next_node, requires_input)
 
     def process(self, state_manager, user_input=None):
+        socketio = ServiceLocator.get_service('socketio')
 
         user_template_id = state_manager.retrieve_data('user_template_id')
+
+        # Start event to show loading indicator
+        socketio.emit('show_loading', {'message': 'Customizing your template...'}, namespace='/')
 
         # Retrieve every page in the template
         pages = UserTemplatePage.query.filter_by(user_template_id=user_template_id).all()
@@ -247,6 +251,9 @@ class CustomizeTemplate(Node):
             elif page.page_name == 'Contact':
                 page_name = 'Contact'
                 self.modify_template(state_manager, page_name, page)
+
+        # Stop loading
+        socketio.emit('hide_loading', {'message': 'Customization complete'}, namespace='/')
 
         next_node = 'DetermineNextStep'
         auto_progress = True

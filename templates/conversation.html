@@ -23,12 +23,19 @@
         </div>
 
         <div class="preview-container">
-            <div class="preview-header">
-                <!-- Navigation buttons or tabs could go here -->
+            <div class="preview-overlay" id="previewOverlay">
+                <div class="text">
+                    <h2>Web Development Takes Time,</h2>
+                    <h2>even for elaa</h2>
+                    <p id="glow">Give us a moment</p>
+                </div>
             </div>
-            <iframe id="previewFrame" src="about:blank"></iframe>
+            <iframe id="previewFrame" src="about:blank" class="loader">
+                <!-- Preview iframe -->
+            </iframe>
             <button id="reloadBtn" onclick="reloadPreview()">↻</button>
             <button id="launchBtn" onclick="window.location.href='/design_dashboard/{{ user_template_id }}';">NEXT</button>
+
         </div>
     </div>
 <script src="{{ url_for('static', filename='js_files/script.js') }}"></script>

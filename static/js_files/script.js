@@ -197,7 +197,6 @@ function loadTemplatePage(pageName) {
     }
 }
 
-
 // Listen for an event indicating that the iframe should be refreshed
 socket.on('refresh_iframe', function() {
     refreshIframe();
@@ -207,9 +206,23 @@ socket.on('refresh_iframe', function() {
 function refreshIframe() {
     const iframe = document.getElementById('previewFrame');
     const currentSrc = iframe.src;
-    iframe.src = "{{ url_for('conversation') }}"; // Temporarily set src to empty to ensure the reload works in all browsers
+    iframe.src = "{{ url_for('conversation') }}";
     iframe.src = currentSrc;
 }
+
+// Listen to event to load
+socket.on('show_loading', data => {
+    console.log(data.message);
+    // Show the loading indicator
+    document.getElementById('previewOverlay').style.display = 'block';
+});
+
+// Listen for the hide loading
+socket.on('hide_loading', data => {
+    console.log(data.message);
+    // Hide the loading indicator
+    document.getElementById('previewOverlay').style.display = 'none';
+});
 
 
 

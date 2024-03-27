@@ -140,7 +140,7 @@ body, html {
     right: 20px;
 }
 
-/* Popup */
+/* Popup  styles*/
 .popup-container {
     position: absolute; /* Changed from fixed to absolute */
     left: 0;
@@ -161,4 +161,48 @@ body, html {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+
+/* Loading overlay styles */
+preview-container {
+    position: relative;
+}
+
+.preview-overlay {
+    position: absolute; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+.text{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  }
+ #glow {
+    animation: glow 1.5s ease-in-out infinite; /* Apply the glow animation */
+ }
+
+
+
+@keyframes glow {
+    0%, 100% {
+        text-shadow: 0 0 10px #FFF, 0 0 20px #FFF, 0 0 30px #FF3D00, 0 0 40px #FF3D00, 0 0 50px #FF3D00, 0 0 60px #FF3D00, 0 0 70px #FF3D00;
+    }
+    50% {
+        text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FF3D00, 0 0 20px #FF3D00, 0 0 25px #FF3D00, 0 0 30px #FF3D00, 0 0 35px #FF3D00;
+    }
+}
 
