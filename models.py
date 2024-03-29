@@ -33,6 +33,7 @@ class WebsiteTemplate(db.Model):
     is_base_template = db.Column(db.Boolean, default=False, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('template_category.id'))
     pages = db.relationship('Page', backref='template', lazy='dynamic')
+    images = db.relationship('TemplateImage', backref='template', lazy=True)
 
 
 class Page(db.Model):

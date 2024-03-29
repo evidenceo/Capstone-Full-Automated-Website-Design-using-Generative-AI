@@ -750,7 +750,7 @@ height: 80px;
 
 }
 .templates-h2 {
-    text-align: center;
+    margin-left: 10px;
     color:#fff;
 }
 .container-mt4 h2{
@@ -778,13 +778,13 @@ ul.nav.nav-tabs{
 }
 
 .card-body {
-    color: #000;
+    color: #fff;
     margin-bottom: 20px;
 }
 
 .btn.btn-success {
     font-size: 1rem;
-    background-image: linear-gradient(to top, #7ed0ff 0%, #45ddd6 100%);
+    background: #4ad4b6;
     padding: 10px 20px;
     border: none;
     color:#fff;
@@ -794,6 +794,12 @@ ul.nav.nav-tabs{
     transition: all 0.35s;
     outline: none;
 }
+
+.btn.btn-success:hover{
+background:#0fb47d;
+transition: all 0.3s ease;
+}
+
 .nav-tabs {
     margin-bottom: 20px;
     margin-top:15px;
