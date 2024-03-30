@@ -1,0 +1,93 @@
+/* Sidenav Styles */
+body{
+background-color: #121213;
+}
+
+.sidenav {
+    background-image: linear-gradient(to right, #141414, #212121);
+    color: #fff;
+    padding: 20px;
+    width: 250px; /* fixed width for sidenav */
+    height: 100%; /* full height */
+    position: fixed; /* fixed position */
+    left: 0; /* align to left side */
+    top: 80px; /* below the navbar */
+    bottom: 0;
+}
+.sidenav-content p {
+    margin: 10px 0;
+}
+
+/* Main Content Styles */
+.main-flex-container {
+    display: flex;
+    height: calc(100vh - 80px);
+    padding-left: 250px;
+}
+
+.temp-container {
+display: grid;
+height: 90vh;
+padding: 50px 50px 80px;
+flex-grow: 1;
+overflow-y: auto;
+}
+
+.templates-h2 {
+    color: #ffffff;
+}
+.nav-item {
+    margin-right: 20px;
+    font-size: 20px;
+    color: #fff;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+.card {
+    width: 500px;
+    height: 300px;
+    padding: 10px;
+    background: #fff;
+    overflow: hidden;
+}
+.card-img-top {
+max-width: 100%;
+height: auto;
+display: block;
+}
+.card-title {
+    font-family: 'Work Sans', sans-serif;
+}
+.card-body {
+    padding: 20px;
+}
+.card-title {
+    font-family: 'Work Sans', sans-serif;
+    text-align: center;
+}
+.btn-success {
+    background-color: #28a745;
+    border: none;
+}
+
+/* Footer Styles */
+.footer {
+    color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-image: linear-gradient(to right, #141414, #212121, #0fb47d);
+    padding: 20px;
+}
+
+/* Overriding Bootstrap default */
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #212121;
+    border-color: #212121;
+}
+

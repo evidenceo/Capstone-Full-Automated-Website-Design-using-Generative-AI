@@ -1,0 +1,64 @@
+body{
+background-color: #121213;
+}
+
+.second_navbar{
+border: 2px solid #0fb47d;
+background-color: #141414;
+position:fixed;
+top: 100px;
+justify-content: center;
+padding:10px;
+margin-left: 20px;
+width: 100%;
+z-index: 10px;
+}
+
+.nav_text {
+color: #ffffff;
+padding: 10px;
+
+}
+
+.temp-container {
+display: grid;
+height: 90vh;
+padding: 0 50px;
+}
+
+.test {
+padding-top: 150px;
+width: 90%;
+z-index: 1px;
+
+}
+
+.footer {
+    color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-image: linear-gradient(to right, #141414, #212121, #0fb47d);
+    padding: 20px;
+}
+
+.card {
+width: 500px;
+height: 300px;
+padding: 10px;
+overflow: hidden;
+}
+
+.card-img-top{
+max-width: 100%;
+height: auto;
+display: block;
+}
+
+.grid-container{
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 10px;
+justify-content: center;
+}
+

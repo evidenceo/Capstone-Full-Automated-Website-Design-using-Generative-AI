@@ -15,7 +15,7 @@
     </script>
 </head>
 <body>
- <nav class="navbar">
+    <nav class="navbar">
         <div class="navbar__container">
             <a href="home.html" id="navbar__logo">ELAA</a>
             <div class="navbar__toggle" id="mobile-menu">
@@ -35,8 +35,9 @@
     </nav>
     <div class="container">
         <div class="chat-container">
-            <div class="chat-history" id="chatHistory" font-colour="0000">
+            <div class="chat-history" id="chatHistory">
                 <!-- Chat messages will be appended here -->
+                {{ message|safe }}
             </div>
             <div class="chat-input-container">
                 <input type="text" id="chatInput" placeholder="Type here...">
@@ -48,16 +49,16 @@
             <div class="preview-overlay" id="previewOverlay">
                 <div class="text">
                     <h2>Web Development Takes Time,</h2>
-                    <h2>even for elaa</h2>
+                    <h2>even for ELAA</h2>
                     <p id="glow">Give us a moment</p>
                 </div>
             </div>
             <iframe id="previewFrame" src="about:blank" class="loader">
                 <!-- Preview iframe -->
             </iframe>
-            <div>
-            <button id="launchBtn" onclick="window.location.href='/design_dashboard/{{ user_template_id }}';" class="chat-button">NEXT</button>
-            </div>
+             <div class="navbar-bottom">
+                <button id="launchBtn" onclick="window.location.href='/design_dashboard/{{ user_template_id }}';" class="chat-button">NEXT</button>
+             </div>
         </div>
 
     </div>

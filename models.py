@@ -59,6 +59,7 @@ class UserTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     original_template_id = db.Column(db.Integer, db.ForeignKey('website_template.id'))  # Link to the original template
+    original_template = db.relationship('WebsiteTemplate', backref='user_templates')
     name = db.Column(db.String(255))  # Allow users to name their template
     status = db.Column(db.String(50))  # E.g., 'in progress', 'completed'
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -74,4 +75,3 @@ class UserTemplatePage(db.Model):
     modified_html = db.Column(db.Text)
     modified_css = db.Column(db.Text)
     modified_js = db.Column(db.Text)
-
