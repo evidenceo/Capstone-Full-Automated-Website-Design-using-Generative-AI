@@ -23,7 +23,8 @@ padding: 10px;
 .temp-container {
 display: grid;
 height: 90vh;
-padding: 0 50px;
+padding: 50px;
+overflow-y: auto;
 }
 
 .test {

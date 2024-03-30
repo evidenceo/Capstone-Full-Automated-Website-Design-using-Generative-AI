@@ -171,11 +171,11 @@ class GetInformation(Node):
         text_bot = ServiceLocator.get_service('text_bot')
         if user_input is None:
             message_options = [
-                "Almost there!\n Do you have any specific design elements in mind for your website? Or would you like"
-                " Elaa to choose them based on your preferences?",
+                "Almost there!\n Do you have any specific design elements (e.g color scheme, font type) in mind for "
+                "your website? Or would you like ELAA to choose them based on your preferences?",
 
-                "We're nearly finished! Would you like to suggest any particular design elements for your website, or "
-                "would you prefer Elaa to select them according to your preferences?"
+                "We're nearly finished! Would you like to suggest any particular design elements (e.g color scheme,"
+                " font type) for your website, or would you prefer ELAA to select them according to your preferences?"
             ]
 
             # pick a random message
@@ -430,7 +430,7 @@ class BasePageModification(Node):
 
         if user_input is None:
             message_options =[
-                "What specific changes would you like on this page?",
+                f"What specific changes would you like on the {self.page_name} page?",
                 f"What would you like to change in the {self.page_name} page? "
             ]
             message = random.choice(message_options)
@@ -460,31 +460,43 @@ class BasePageModification(Node):
 
             # Extract task from user input
             prompt_extraction = (
-                f"Based on the user's feedback for selected website page, extract the specific modifications required."
-                f"User feedback: '{user_input}'. Identify the key elements needing changes, such as colors, text content"
-                f"layout adjustments, or any specified preferences."
+                f"Analyze the user's feedback on the desired modifications for a web page and determine specific tasks "
+                f"for HTML and CSS updates. The user's feedback is as follows: '{user_input}'. From this feedback, "
+                f"identify modifications that needs to be done on the HTML and CSS code of the page. Categorize the "
+                f"modifications into tasks for HTML (e.g., adding new sections, semantic tagging, text generation) and "
+                f"tasks for CSS (e.g., color changes, font updates). Summarize the tasks in JSON format, with separate "
+                f"keys for 'HTML_Task' and 'CSS_Task'. Each key should map to a list of tasks described in clear, "
+                f"actionable terms. Ensure the output is structured and precise to guide subsequent HTML and CSS "
+                f"modifications effectively."
             )
 
             extracted_modifications = text_bot.extraction(prompt_extraction)
+            print(f"extracted modifications: {extracted_modifications}")  # Debug
 
             modification_instructions_html = (
                 f"Given the extracted modifications: {extracted_modifications}, revise the HTML code to incorporate "
-                f"these changes. Ensure the modifications allow for CSS styling, including adding necessary classes or"
-                f"IDs for sections requiring style adjustments. Maintain HTML5 standards for enhanced accessiility and"
-                f"web practices."
+                f"the changes specified for HTML only. They would be under 'HTML_Task'. Ensure the modifications allow"
+                f" for CSS styling, including adding necessary classes or IDs for sections requiring style adjustments."
+                f" Maintain HTML5 standards for enhanced accessibility and web practices. If there are no tasks "
+                f"specified for HTML modification, return the original HTML code given."
             )
 
             updated_html = template_bot.modify_html(page_html, modification_instructions_html)
+            print(f"updated html: {updated_html}")
+
+            # Update the modified template in the database
+            DBUtils.update_template_in_db(user_template_id, page_name, updated_html, 'html')
 
             # Retrieve the metadata of the html webpage to give css AI context
             metadata = template_bot.get_metadata(updated_html)
 
             # Then do css
             modification_instructions_css = (
-                f"Given the newly modified HTML structure: {metadata}, create CSS updates that align with the changes"
-                f"and user preferences. Focues on applying styles for new classes or IDs, adjust color schemes, "
-                f"typography, and layout responsiveness as per the user's feedback. Ensure the CSS enhances the page's "
-                f"visual appeal and user interaction, adhering to modern web design principles."
+                f"Given the newly modified HTML structure: {metadata} and the extracted modifications: "
+                f"{extracted_modifications} revise the CSS code to incorporate the changes for CSS only."
+                f"They would be under 'CSS_Task'. Make use of the IDs and classes in the HTML's metadata structure."
+                f" Ensure the CSS enhances the page's visual appeal and user interaction, adhering to modern web design"
+                f" principles. If there are no changes required for CSS just return the original CSS."
             )
 
             updated_css = template_bot.modify_css(page_css, modification_instructions_css)
