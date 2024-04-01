@@ -116,7 +116,7 @@ header .fa-bars{
     display: flex;
     align-items: center;
     min-height: 100vh;
-    background: url('/static/images/peach.jpg') no-repeat;
+    background: url('/static/assets/peach.jpg') no-repeat;
     background-size: cover;
     background-position: center;
   }

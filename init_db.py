@@ -89,6 +89,45 @@ templates_data = [
                 "description": "Ecommerce Template 1 cover"
             }
             # Add other images as needed
+        ],
+    },
+    {
+        "name": "Flower Shop",
+        "is_base_template": True,
+        "category": "ecommerce",
+        "pages": [
+            {
+                "page_name": "Home",
+                "html_content": read_file("template_files/ecommerce/color-one/html/home.html"),
+                "css_content": read_file("template_files/ecommerce/color-one/css/home_styles.css"),
+                "js_content": read_file("template_files/ecommerce/color-one/js/script.js"),
+            },
+            {
+                "page_name": "About",
+                "html_content": read_file("template_files/ecommerce/color-one/html/about.html"),
+                "css_content": read_file("template_files/ecommerce/color-one/css/about_styles.css"),
+                "js_content": read_file("template_files/ecommerce/color-one/js/script.js"),
+            },
+            {
+                "page_name": "Product",
+                "html_content": read_file("template_files/ecommerce/color-one/html/products.html"),
+                "css_content": read_file("template_files/ecommerce/color-one/css/products_styles.css"),
+                "js_content": read_file("template_files/ecommerce/color-one/js/script.js"),
+            },
+            {
+                "page_name": "Contact",
+                "html_content": read_file("template_files/ecommerce/color-one/html/contact.html"),
+                "css_content": read_file("template_files/ecommerce/color-one/css/contact_styles.css"),
+                "js_content": read_file("template_files/ecommerce/color-one/js/script.js"),
+            }
+            # Add more pages as needed
+        ],
+        "images": [
+            {
+                "image_path": "template_files_img/flower-cover.png",
+                "description": "Flower Template Cover Photo"
+            }
+            # Add other images as needed
         ]
     },
     {

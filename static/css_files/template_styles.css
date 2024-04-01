@@ -5,13 +5,13 @@ background-color: #121213;
 .second_navbar{
 border: 2px solid #0fb47d;
 background-color: #141414;
-position:fixed;
+position: fixed;
 top: 100px;
 justify-content: center;
 padding:10px;
 margin-left: 20px;
 width: 100%;
-z-index: 10px;
+z-index: 20px;
 }
 
 .nav_text {
@@ -25,6 +25,7 @@ display: grid;
 height: 90vh;
 padding: 50px;
 overflow-y: auto;
+flex-grow: 1;
 }
 
 .test {
@@ -48,6 +49,7 @@ width: 500px;
 height: 300px;
 padding: 10px;
 overflow: hidden;
+z-index: 0;
 }
 
 .card-img-top{
@@ -56,10 +58,10 @@ height: auto;
 display: block;
 }
 
-.grid-container{
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-gap: 10px;
-justify-content: center;
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 20px;
+    align-items: start;
 }
 

@@ -1,7 +1,10 @@
 # ELAA: An AI Web-design Website Application
 
 ## Overview
-ELAA (Enhanced Learning through Artificial Assistance) is an innovative web design application that leverages AI to streamline and enhance the website creation process. It aims to provide a user-friendly platform where users can interactively design, customize, and deploy websites with the assistance of AI-driven insights and modifications. Key features include template selection, AI-powered customization for HTML, CSS, JavaScript, dynamic content generation, and a real-time preview of design changes.
+ELAA is an innovative web design application that leverages AI to streamline and enhance the website creation process.
+It aims to provide a user-friendly platform where users can interactively design, customize, and deploy websites with
+the assistance of AI-driven insights and modifications. Key features include template selection, AI-powered
+customization for HTML, CSS, JavaScript, dynamic content generation, and a real-time preview of design changes.
 
 ## Getting Started
 
@@ -42,12 +45,15 @@ pip install flask flask-socketio flask-login flask-cors sqlalchemy werkzeug open
 - **Deploy:** Once satisfied, deploy your website directly from the application.
 
 ### Examples and Use Cases
-- **E-commerce Site:** Start with an e-commerce template and customize product listings, colors, and styles through AI suggestions.
-- **Portfolio Site:** Choose a portfolio template and instruct the AI to insert personal projects, adjust layouts, and modify color schemes.
+- **E-commerce Site:** Start with an e-commerce template and customize product listings, colors, and styles through
+AI suggestions.
+- **Portfolio Site:** Choose a portfolio template and instruct the AI to insert personal projects, adjust layouts, and
+modify color schemes.
 
 ## API Reference
 
-ELAA does not expose a traditional API but interacts internally through Socket.IO events for real-time communication between the client and server.
+ELAA does not expose a traditional API but interacts internally through Socket.IO events for real-time communication
+between the client and server.
 
 ### Key Socket.IO Events
 - `start_conversation`: Initiates the conversation with the AI on the client side.
@@ -57,7 +63,8 @@ ELAA does not expose a traditional API but interacts internally through Socket.I
 
 ### Database Schema
 - **User:** Stores user credentials and information.
-- **TemplateCategory, WebsiteTemplate, Page, TemplateImage:** Represent the structure for storing website templates and their components.
+- **TemplateCategory, WebsiteTemplate, Page, TemplateImage:** Represent the structure for storing website templates and
+their components.
 - **UserTemplate, UserTemplatePage:** Store user-specific template selections and customizations.
 
 ### Service Architecture
