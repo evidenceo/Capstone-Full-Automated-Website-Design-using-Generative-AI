@@ -106,7 +106,12 @@ function setupEventListeners(userTemplateId) {
             .then(response => response.json())
             .then(data => {
                 console.log('Template saved:', data);
-                console.log(editor.currentPageName)
+                // Display the confirmation message
+                saveConfirmation.style.display = 'inline';
+                // Hide the confirmation message after 2 seconds
+                setTimeout(() => {
+                    saveConfirmation.style.display = 'none';
+                }, 2000);
             })
             .catch(error => {
                 console.error('Error saving template:', error);

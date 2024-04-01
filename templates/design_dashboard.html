@@ -13,31 +13,26 @@
 <body data-user-template-id="{{ user_template_id }}">
   <nav class="navbar">
         <div class="navbar__container">
-            <a href="home.html" id="navbar__logo">ELAA</a>
+            <a onclick="window.location.href='/'" id="navbar__logo">ELAA</a>
             <div class="navbar__toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
             </div>
             <ul class="navbar__menu">
-
-                <li class="navbar__btn2">
-                    <a href="{{ url_for('http_routes.user_dashboard') }}" class="button">
-                    User Dashboard
-                    </a>
+                <li class="navbar__btn">
+                        <button id="saveButton" class="button">Save Changes </button>
+                        <span id="saveConfirmation" class="save-confirmation" style="display: none; color: #fff;">Changes saved!</span>
+                </li>
+                <li class="navbar__menu">
+                      <button id="publishButton" class="button">Export</button>
                 </li>
             </ul>
         </div>
     </nav>
-<div class="publishbtn-container">
-  <button id="publishButton" class="publish-btn">Export</button>
-</div>
-   <div id="editor-container">
-        <div id="editor"></div> <!-- Froala editor container -->
-    </div>
 
-    <div>
-        <button id="saveButton" class="button">Save Changes </button>
+   <div id="editor-container" class="editor-container">
+        <div id="editor"></div> <!-- Froala editor container -->
     </div>
 
     <!-- Initialize the editor. -->
@@ -49,6 +44,12 @@
     <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js'></script>
     <!-- Custom Script -->
     <script src="{{ url_for('static', filename='js_files/design_dasboard.js') }}"></script>
+
+<footer class="footer">
+    <div>
+        <p>&copy; 2024 ELAA. Capstone Project.</p>
+    </div>
+</footer>
 
 </body>
 </html>

@@ -2,7 +2,7 @@ from main import create_app, db
 
 app, _ = create_app()
 
-from models import WebsiteTemplate, Page, TemplateCategory
+from models import WebsiteTemplate, Page, TemplateCategory, TemplateImage
 
 
 # Read template files
@@ -44,6 +44,13 @@ templates_data = [
             }
             # Add more pages as needed
         ],
+        "images": [
+            {
+                "image_path": "template_files_img/ecommerce_template1_cover.png",
+                "description": "Ecommerce Template 1 cover"
+            }
+            # Add other images as needed
+        ]
     },
     {
         "name": "Ecommerce Template 2",
@@ -76,6 +83,13 @@ templates_data = [
             }
             # Add more pages as needed
         ],
+        "images": [
+            {
+                "image_path": "template_files_img/plain_two_cover.png",
+                "description": "Ecommerce Template 1 cover"
+            }
+            # Add other images as needed
+        ]
     },
     {
         "name": "Events Template 1",
@@ -90,6 +104,13 @@ templates_data = [
             }
             # Add more pages as needed
         ],
+        "images": [
+            {
+                "image_path": "template_files_img/events-plain-one-cover.png",
+                "description": "Ecommerce Template 1 cover"
+            }
+            # Add other images as needed
+        ]
     },
     {
         "name": "Portfolio Template 1",
@@ -104,6 +125,13 @@ templates_data = [
             }
             # Add more pages as needed
         ],
+        "images": [
+            {
+                "image_path": "template_files_img/portfolio-plain-one.png",
+                "description": "Ecommerce Template 1 cover"
+            }
+            # Add other images as needed
+        ]
     },
     # Add more templates as needed
 ]
@@ -136,6 +164,15 @@ def add_templates_to_database():
         )
         db.session.add(template)
         db.session.flush()  # This will assign an ID to template without committing the transaction
+
+        # Add template image
+        for image_info in template_data.get("images", []):
+            image = TemplateImage(
+                template_id=template.id,
+                image_path=image_info["image_path"],
+                description=image_info.get("description", "")
+            )
+            db.session.add(image)
 
         for page_data in template_data["pages"]:
             page = Page(

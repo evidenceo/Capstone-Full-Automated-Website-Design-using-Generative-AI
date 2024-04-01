@@ -372,14 +372,14 @@ height: 80px;
         rgba(0,0,0,0) 0%, 
         rgba(17,17,17,0.6) 100%
         ), 
-        url('pic4.jpg');
+        url('../web_images/pic4.jpg');
     background-size: cover;
     position: relative;
     color: #fff;
 }
 
 .services__card:nth-child(2){
-  background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(17,17,17,0.6) 100%), url('webdesign.jpg'); 
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(17,17,17,0.6) 100%), url('../web_images/webdesign.jpg');
 }
 
 .services h2{
@@ -750,7 +750,7 @@ height: 80px;
 
 }
 .templates-h2 {
-    text-align: center;
+    margin-left: 10px;
     color:#fff;
 }
 .container-mt4 h2{
@@ -778,13 +778,13 @@ ul.nav.nav-tabs{
 }
 
 .card-body {
-    color: #000;
+    color: #fff;
     margin-bottom: 20px;
 }
 
 .btn.btn-success {
     font-size: 1rem;
-    background-image: linear-gradient(to top, #7ed0ff 0%, #45ddd6 100%);
+    background: #4ad4b6;
     padding: 10px 20px;
     border: none;
     color:#fff;
@@ -794,6 +794,12 @@ ul.nav.nav-tabs{
     transition: all 0.35s;
     outline: none;
 }
+
+.btn.btn-success:hover{
+background:#0fb47d;
+transition: all 0.3s ease;
+}
+
 .nav-tabs {
     margin-bottom: 20px;
     margin-top:15px;
@@ -848,6 +854,25 @@ margin-bottom:5px;
     background: #4ad4b6;
     color: #fff;
     }
+
+.footer {
+    color: #ffffff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-image: linear-gradient(to right, #141414, #212121, #0fb47d);
+    padding: 20px;
+}
+
+.editor-container{
+position:fixed;
+width: 100%
+}
+
+#editor {
+    height: calc(100vh - 80px - 50px);
+    overflow-y: auto;
+}
 
 
 

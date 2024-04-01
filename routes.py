@@ -139,9 +139,3 @@ def conversation(template_id):
 @login_required
 def design_dashboard(user_template_id):
     return render_template('design_dashboard.html', user_template_id=user_template_id)
-
-
-
-
-
-

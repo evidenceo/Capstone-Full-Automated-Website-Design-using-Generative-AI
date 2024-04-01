@@ -11,7 +11,12 @@ class WelcomeNode(Node):
         super().__init__(name, next_node, requires_input)
 
     def process(self, state_manager, user_input=None):
-        message = "Welcome to Elaa, your AI web designer! Let's start creating your dream website."
+        message_options = [
+            "Welcome to ELAA, your AI web designer! Let's begin.",
+            "Hello! I'm ELAA, your personal AI web designer. Let's get started on crafting your dream website."
+        ]
+        # pick a random message
+        message = random.choice(message_options)
         next_node = "GetInformation"
         response_type = None
         auto_progress = True
@@ -118,7 +123,9 @@ class GetInformation(Node):
 
             # save the input
             state_manager.store_data('portfolio_theme', get_portfolio_theme)
+
             state_manager.set_current_step("get_professional_goals")
+
             return self.process(state_manager)
 
     def get_professional_goals(self, state_manager, user_input):
@@ -126,8 +133,8 @@ class GetInformation(Node):
         text_bot = ServiceLocator.get_service('text_bot')
         if user_input is None:
             message_options = [
-                "Awesome!\n What do goals do you have for this website?",
-                "Good Good...\n So what are you aiming to achieve with this website?"
+                "Awesome! What do goals do you have for this website?",
+                "Awesome! What are the main goals you're looking to achieve with your website?"
             ]
 
             # pick a random message
@@ -146,7 +153,7 @@ class GetInformation(Node):
 
             # extract info from user input
             prompt_extraction = (
-                f"Given {last_system_message} and {user_input}. Extract the business goals from the "
+                f"Given {last_system_message} and {user_input}. Extract the goals for this portfolio website from the "
                 f"information and save in JSON format. Only output JSON format result without any additional"
                 f"explanation or text.")
             get_professional_goals = text_bot.extraction(prompt_extraction)
@@ -163,11 +170,11 @@ class GetInformation(Node):
         text_bot = ServiceLocator.get_service('text_bot')
         if user_input is None:
             message_options = [
-                "Almost there!\n Do you have any specific design elements in mind for your website? Or would you like"
-                " elaa to choose them based on your preferences?",
+                "Almost there! Do you have any specific design elements (e.g color scheme, font type) in mind for "
+                "your website? Or would you like ELAA to choose them based on your preferences?",
 
-                "We're nearly finished! Would you like to suggest any particular design elements for your website, or "
-                "would you prefer elaa to select them according to your preferences?"
+                "We're nearly finished! Would you like to suggest any particular design elements (e.g color scheme,"
+                " font type) for your website, or would you prefer ELAA to select them according to your preferences?"
             ]
 
             # pick a random message
@@ -188,23 +195,37 @@ class GetInformation(Node):
             website_name = state_manager.retrieve_data('website_name')
             portfolio_theme = state_manager.retrieve_data('portfolio_theme')
             professional_goals = state_manager.retrieve_data('professional_goals')
-            template_type = state_manager.retrieve_data('template_type')
 
             # extract info from user input
-            prompt_extraction = (
-                f"Given the question {last_system_message} and user's answer is {user_input}."
-                f"generate comprehensive design elements in JSON format. These elements should include color schemes,"
-                f" fonts, spacing, breakpoints, animations, gradients, imagery style, interactive elements, "
-                f"navigation style, content layout, and grid system. Ensure that the design suggestions are coherent"
-                f" and align with modern web design principles, enhancing user experience and engagement. Ensure that "
-                f"when deciding the design elements, pay specific attention to {user_input} and their related "
-                f"information such as {website_name}, {portfolio_theme} and {professional_goals} ")
+            prompt_extraction = (f"Generate a web design blueprint in JSON format for modifying an existing website"
+                                 f" template composed of HTML and CSS. The blueprint should encompass key design "
+                                 f"elements essential for a cohesive, user-centric web experience. Utilize the provided"
+                                 f" information to tailor the blueprint, ensuring it aligns with the specific needs and"
+                                 f" goals of the website. The blueprint must include detailed specifications for the "
+                                 f"following elements:"
+                                 f"- Website Name: {website_name}"
+                                 f"- Portfolio Theme: {portfolio_theme}"
+                                 f"- Goal of the website: {professional_goals}"
+                                 f"- Color Scheme: Suggest based on {portfolio_theme}, {professional_goals}, and {user_input} "
+                                 f"(if specified)"
+                                 f"- Typography: Recommend font styles and usage for consistency and readability"
+                                 f"- Interactive Elements: Detail the design for buttons, forms, and other interactive"
+                                 f" components"
+                                 f"- Imagery and Visual Elements: Outline the approach for using images, icons, and "
+                                 f"graphics"
+                                 f"- Responsive Design and Breakpoints: Define how the website will adapt to different "
+                                 f"screen sizes for optimal user experience"
+                                 f"Consider the user's response regarding preferred design elements ({user_input}) to "
+                                 f"guide your recommendations, especially for color scheme and typography choices. The "
+                                 f"goal is to create a blueprint that reflects the website’s identity, enhances the "
+                                 f"presentation of {portfolio_theme}, and supports the achievement of {professional_goals}."
+                                 f"Please output the result in JSON format, focusing solely on the design blueprint.")
 
-            get_design_scheme = text_bot.extraction(prompt_extraction)
-            print(f"prompt_extraction: {get_design_scheme}")  # debug
+            get_design_blueprint = text_bot.extraction(prompt_extraction)
+            print(f"prompt_extraction: {get_design_blueprint}")  # debug
 
             # save the input
-            state_manager.store_data('design_elements', get_design_scheme)
+            state_manager.store_data('design_blueprint', get_design_blueprint)
             return self.final_interaction(state_manager)
 
     def final_interaction(self, state_manager):
@@ -254,27 +275,42 @@ class CustomizeTemplate(Node):
         socketio = ServiceLocator.get_service('socketio')
 
         # Get all the information i need
-        website_name = state_manager.retrieve_data('website_name')
-        product = state_manager.retrieve_data('product')
-        business_goal = state_manager.retrieve_data('business_goal')
-        design_elements = state_manager.retrieve_data('design_elements')
+        design_blueprint = state_manager.retrieve_data('design_blueprint')
         user_template_id = state_manager.retrieve_data('user_template_id')
 
         # Get the page for modification
         original_html = page.modified_html
         original_css = page.modified_css
 
-        modification_instructions_html = (f"Modify this portfolio HTML template to incorporate the website's theme"
-                                          f" around {website_name}, the products/services offered ({product}),"
-                                          f" and the business goals ({business_goal}). Enhance the layout to reflect"
-                                          f" the {design_elements} theme, using HTML5 semantic elements for a rich,"
-                                          f" interactive user experience. Prepare the layout for dynamic CSS effects as"
-                                          f" described in {design_elements}, with comments indicating where these "
-                                          f"effects should be applied. Do not generate the CSS stylings too, as we have"
-                                          f" a different file for it. Ensure the structure is optimized for both "
-                                          f"aesthetics and functionality, adhering to web accessibility standards."
-
-                                          )
+        modification_instructions_html = (f"Given the design blueprint {design_blueprint}, meticulously modify the"
+                                          f" provided HTML code to align with the blueprint's specifications. The "
+                                          f"objective is to structure the HTML in a way that seamlessly integrates "
+                                          f"with the CSS stylings outlined in the blueprint. To achieve this, pay "
+                                          f"close attention to the following guidelines:"
+                                          f"1. Apply HTML5 semantic elements (such as <header>, <footer>, <section>, "
+                                          f"and <article>) to improve the structure and accessibility of the web "
+                                          f"content, ensuring it matches the layout and sectioning detailed in the "
+                                          f"blueprint."
+                                          f"2. Where the design blueprint specifies styles for specific sections, "
+                                          f"elements, or components but lacks corresponding classes or IDs, introduce"
+                                          f" appropriate class or ID attributes. Choose meaningful names that reflect"
+                                          f" the content or function of the element (e.g., 'product-list', "
+                                          f"'contact-form'). 3. For interactive elements detailed in the blueprint, "
+                                          f"such as buttons or forms, ensure they are implemented with HTML5 "
+                                          f"attributes that enhance usability and accessibility. For example, "
+                                          f"use <button> elements for actions and ensure <form> elements have proper"
+                                          f" labeling. 4. Incorporate placeholders for imagery and visual elements "
+                                          f"as specified in the blueprint. Use <img> tags with 'alt' attributes for "
+                                          f"images, and consider placeholders for any icons or graphics, ensuring they "
+                                          f"can be easily targeted with CSS for styling. 5. Ensure the document is "
+                                          f"structured to facilitate responsive design, with a clear hierarchy and "
+                                          f"layout that adapts based on the breakpoints defined in the blueprint. "
+                                          f"This may involve organizing content within container elements that can be "
+                                          f"dynamically styled using CSS. Remember, the aim is to refine the HTML "
+                                          f"code so it not only embodies the aesthetic and functional aspirations of "
+                                          f"the design blueprint but also lays a solid foundation for the subsequent "
+                                          f"CSS enhancements. Please provide the modified HTML code, enhanced "
+                                          f"according to these instructions, using HTML5 standards.")
 
         updated_html = template_bot.modify_html(original_html, modification_instructions_html)
 
@@ -286,15 +322,38 @@ class CustomizeTemplate(Node):
         metadata = template_bot.get_metadata(updated_html)
 
         # Then do css
-        modification_instructions_css = (f"Create a cohesive CSS stylesheet for a portfolio HTML page that embodies the"
-                                         f" {design_elements} theme, with special attention to {metadata} instructions."
-                                         f" Utilize modern CSS techniques to bring the design elements to life, "
-                                         f"ensuring consistency across the website. Apply styles according to the"
-                                         f" metadata guidelines, focusing on animations, gradients, and responsive"
-                                         f" design features that enhance the visual appeal and user experience. Aim for"
-                                         f" a balance between creativity and usability, ensuring the site remains"
-                                         f" accessible and performs well across devices."
-                                         )
+        modification_instructions_css = (f"Given the newly modified HTML structure: {metadata} appropriate class and ID"
+                                         f" attributes for styling, and placeholders for interactive and visual elements"
+                                         f" as outlined in the {design_blueprint}, create CSS stylings that bring the "
+                                         f"design blueprint to life. Follow these key directives: "
+                                         f"1. Color Scheme: Implement the color scheme specified in the design blueprint"
+                                         f" across all elements, ensuring a harmonious and visually appealing interface."
+                                         f" Apply primary, secondary, accent, background, and text colors to appropriate"
+                                         f" elements, matching their identifiers in the updated HTML. "
+                                         f"2. Typography: Style textual content using the font families, sizes, and "
+                                         f"weights outlined in the blueprint. Ensure that headings, paragraphs, buttons,"
+                                         f" and navigation items reflect the specified typography settings, enhancing "
+                                         f"readability and aesthetic appeal. "
+                                         f"3. Layout and Grid System: Utilize the grid system from the blueprint to "
+                                         f"structure the page layouts. Apply CSS Grid or Flexbox to organize content "
+                                         f"according to the specified columns, margins, and gutters, ensuring "
+                                         f"responsive and adaptive design across different devices and screen sizes. "
+                                         f"4. Interactive Elements: Style buttons, forms, and other interactive "
+                                         f"components according to the interactive elements guide in the blueprint. "
+                                         f"Focus on hover states, animations, and other dynamic effects that encourage"
+                                         f" user interaction, using classes and IDs to target these elements specifically."
+                                         f"5. Imagery and Visual Styling: Apply CSS to style imagery, icons, and "
+                                         f"graphics as per the blueprint. This includes setting sizes, adding overlays "
+                                         f"or filters, and positioning visual elements to complement the content layout."
+                                         f"6. Responsive Design: Implement responsive design features using media "
+                                         f"queries based on the breakpoints defined in the blueprint. Ensure that the "
+                                         f"website's layout, typography, and interactive elements adjust smoothly across"
+                                         f" different devices.The goal is to produce a cohesive CSS stylesheet that "
+                                         f"accurately applies the design blueprint's aesthetic and functional "
+                                         f"specifications to the updated HTML code. This CSS should enhance user "
+                                         f"experience, emphasize the product or service offered, and support the "
+                                         f"website's business goals. Please output the CSS code modifications "
+                                         f"necessary to achieve this.")
 
         updated_css = template_bot.modify_css(original_css, modification_instructions_css)
         # Update the modified template in the database
@@ -315,10 +374,8 @@ class DetermineNextStep(Node):
         if user_input is None:
             # send message to frontend to show the damn popup
             action = 'show_popup'
-            message = ("In the next stage of the conversation, you would be allowed to further customize your template"
-                       " twice before ending the conversation. If you are satisfied with the current"
-                       " implementation, You can end the conversation, otherwise click on the 'Continue' button to"
-                       " continue this conversation.")
+            message = ("Next, you can customize your template twice more or conclude here. Click 'Continue' to proceed"
+                       " or end if you're happy with the current setup.")
             buttons = [
                 {'name': 'Continue', 'value': 'continue'},
                 {'name': 'End', 'value': 'end'}
@@ -334,7 +391,7 @@ class DetermineNextStep(Node):
                 return {'next_node': next_node, 'auto_progress': auto_progress}
             elif user_input == 'end':
                 message = ("Got it. The conversation will end here. Click on the 'Next' button at the bottom right to"
-                           " customize the template further in the edit dashboard")
+                           " customize the template further in the Edit dashboard")
                 response_type = None
                 next_node = None
 
@@ -344,6 +401,7 @@ class DetermineNextStep(Node):
 class CustomizeTwice(Node):
     def __init__(self, name, next_node=None, requires_input=True):
         super().__init__(name, next_node, requires_input)
+        self.skip_node = "FinalMessage"
 
     def process(self, state_manager, user_input=None):
         # Determine the current step in the process
@@ -354,8 +412,8 @@ class CustomizeTwice(Node):
             return self.first_iteration(state_manager, user_input)
         elif current_step == "second_iteration":
             return self.second_iteration(state_manager, user_input)
-        else:
-            return self.first_iteration(state_manager)
+        elif current_step == "finalize":
+            return self.finalize_interaction(state_manager)
 
     def first_iteration(self, state_manager, user_input):
         state_manager.set_current_step('first_iteration')
@@ -364,7 +422,7 @@ class CustomizeTwice(Node):
         socketio = ServiceLocator.get_service('socketio')
 
         if user_input is None:
-            message = f"What would you like to further customize in this page?"
+            message = f"What specific changes would you like on this page?"
             # set response type for user
             response_type = 'text'
 
@@ -387,73 +445,60 @@ class CustomizeTwice(Node):
 
             # Extract task from user input
             prompt_extraction = (
-                f"Given the user's request to modify the website, categorize the changes that should be applied to the "
-                f"HTML structure and those that should be applied through CSS styling. Organize the tasks under two "
-                f"categories: 'html_change_request' for changes in the HTML structure and "
-                f"'css_change_request' for styling changes. Format the output as JSON with these two keys, providing"
-                f" detailed instructions under each category based on the user's request."
-                f"User request: {user_input}. Please generate the categorized tasks in JSON format."
+                f"Analyze the user's feedback on the desired modifications for a web page and determine specific tasks "
+                f"for HTML and CSS updates. The user's feedback is as follows: '{user_input}'. From this feedback, "
+                f"identify modifications that needs to be done on the HTML and CSS code of the page. Categorize the "
+                f"modifications into tasks for HTML (e.g., adding new sections, semantic tagging, text generation) and "
+                f"tasks for CSS (e.g., color changes, font updates). Summarize the tasks in JSON format, with separate "
+                f"keys for 'HTML_Task' and 'CSS_Task'. Each key should map to a list of tasks described in clear, "
+                f"actionable terms. Ensure the output is structured and precise to guide subsequent HTML and CSS "
+                f"modifications effectively."
             )
 
-            design_update_json = text_bot.extraction(prompt_extraction)
-            print(design_update_json)  # Debug
+            extracted_modifications = text_bot.extraction(prompt_extraction)
+            print(f"extracted modifications: {extracted_modifications}") # Debug
 
-            # Remove Markdown code block syntax if present
-            if design_update_json.startswith("```json") and design_update_json.endswith("```"):
-                # Strip off the Markdown code block delimeters
-                design_update_json = design_update_json[7:-3].strip()
+            modification_instructions_html = (
+                f"Given the extracted modifications: {extracted_modifications}, revise the HTML code to incorporate "
+                f"the changes specified for HTML only. They would be under 'HTML_Task'. Ensure the modifications allow"
+                f" for CSS styling, including adding necessary classes or IDs for sections requiring style adjustments."
+                f" Maintain HTML5 standards for enhanced accessibility and web practices. If there are no tasks "
+                f"specified for HTML modification, return the original HTML code given."
+            )
 
-            try:
-                # Then start modification
-                """Loading Frontend - Begin"""
-                design_update = json.loads(design_update_json)
-                print(f"Design update tasks: {design_update}")  # debug
+            updated_html = template_bot.modify_html(page_html, modification_instructions_html)
+            print(f"updated html: {updated_html}")
 
-                # Check if HTML changes are requested
-                if design_update.get("html_change_request"):
-                    # If the list is not empty, process HTML changes
-                    modification_instructions_html = (
-                        f"Refine the HTML for this portfolio page by incorporating the following changes"
-                        f" requested by the user: {design_update['html_change_request']}. "
-                        f"Ensure these modifications blend seamlessly with the existing "
-                        f"content and layout, maintaining the page's overall aesthetics and "
-                        f"functionality. Focus on enhancing user engagement and accessibility "
-                        f"with the new content."
-                    )
+            # Update the modified template in the database
+            DBUtils.update_template_in_db(user_template_id, page_name, updated_html, 'html')
 
-                    updated_html = template_bot.modify_html(page_html, modification_instructions_html)
-                    # Update the modified template in the database
-                    DBUtils.update_template_in_db(user_template_id, page_name, updated_html, 'html')
-                    print(f"updated_html: {updated_html}")  # Debug
-                else:
-                    print("No HTML changes requested. Skipping to CSS modifications.")
+            # Retrieve the metadata of the html webpage to give css AI context
+            metadata = template_bot.get_metadata(updated_html)
+            print(f"metadata: {metadata}")
 
-                # Then do css
-                modification_instructions_css = (
-                    f"Update the CSS for this portfolio page to implement the following style modifications"
-                    f" as requested by the user: {design_update['css_change_request']}. "
-                    f"Apply these changes in a way that enhances the visual appeal and user "
-                    f"experience of the website while ensuring consistency with the existing "
-                    f"design theme. Prioritize responsive design and accessibility in these "
-                    f"updates."
-                )
+            # Then do css
+            modification_instructions_css = (
+                f"Given the newly modified HTML structure: {metadata} and the extracted modifications: "
+                f"{extracted_modifications} revise the CSS code to incorporate the changes for CSS only."
+                f"They would be under 'CSS_Task'. Make use of the IDs and classes in the HTML's metadata structure."
+                f" Ensure the CSS enhances the page's visual appeal and user interaction, adhering to modern web design"
+                f" principles. If there are no changes required for CSS just return the original CSS."
+            )
 
-                updated_css = template_bot.modify_css(page_css, modification_instructions_css)
-                # Update the modified template in the database
-                DBUtils.update_template_in_db(user_template_id, page_name, updated_css, 'css')
-                print(f"updated_css: {updated_css}")  # Debug
+            updated_css = template_bot.modify_css(page_css, modification_instructions_css)
 
-                # Refresh iframe
-                socketio.emit('refresh_iframe')  # Finsh loading
+            # Update the modified template in the database
+            DBUtils.update_template_in_db(user_template_id, page_name, updated_css, 'css')
+            print(f"updated_css: {updated_css}")  # Debug
 
-                # Stop loading
-                socketio.emit('hide_loading', {'message': 'Customization complete'}, namespace='/')
+            # Refresh iframe
+            socketio.emit('refresh_iframe')  # Finsh loading
 
-                state_manager.set_current_step("second_iteration")
-                return self.process(state_manager)
+            # Stop loading
+            socketio.emit('hide_loading', {'message': 'Customization complete'}, namespace='/')
 
-            except json.JSONDecodeError as e:
-                print(f"Failed to parse JSON: {e}")
+            state_manager.set_current_step("second_iteration")
+            return self.process(state_manager)
 
     def second_iteration(self, state_manager, user_input):
         template_bot = ServiceLocator.get_service('template_bot')
@@ -462,13 +507,14 @@ class CustomizeTwice(Node):
 
         if user_input is None:
             message = f"What would you like to further customize in this page?"
+
             # set response type for user
-            response_type = 'text'
+            response_type = 'hybrid'
 
-            # reset step
-            state_manager.set_current_step(None)
+            # Button for user to skip this step
+            buttons = [{'name': 'End Conversation', 'value': 'skip'}]
 
-            return {'message': message, 'response_type': response_type}
+            return {'message': message, 'response_type': response_type, 'buttons': buttons}
         else:
             user_template_id = state_manager.retrieve_data('user_template_id')
             page_name = 'Home'
@@ -484,83 +530,68 @@ class CustomizeTwice(Node):
 
             # Extract task from user input
             prompt_extraction = (
-                f"Given the user's request to modify the website, categorize the changes that should be applied to the "
-                f"HTML structure and those that should be applied through CSS styling. Organize the tasks under two "
-                f"categories: 'html_change_request' for changes in the HTML structure and "
-                f"'css_change_request' for styling changes. Format the output as JSON with these two keys, providing"
-                f" detailed instructions under each category based on the user's request."
-                f"User request: {user_input}. Please generate the categorized tasks in JSON format."
+                f"Analyze the user's feedback on the desired modifications for a web page and determine specific tasks "
+                f"for HTML and CSS updates. The user's feedback is as follows: '{user_input}'. From this feedback, "
+                f"identify modifications that needs to be done on the HTML and CSS code of the page. Categorize the "
+                f"modifications into tasks for HTML (e.g., adding new sections, semantic tagging, text generation) and "
+                f"tasks for CSS (e.g., color changes, font updates). Summarize the tasks in JSON format, with separate "
+                f"keys for 'HTML_Task' and 'CSS_Task'. Each key should map to a list of tasks described in clear, "
+                f"actionable terms. Ensure the output is structured and precise to guide subsequent HTML and CSS "
+                f"modifications effectively."
             )
 
-            design_update_json = text_bot.extraction(prompt_extraction)
-            print(design_update_json)  # Debug
+            extracted_modifications = text_bot.extraction(prompt_extraction)
+            print(f"extracted modifications: {extracted_modifications}")  # Debug
 
-            # Remove Markdown code block syntax if present
-            if design_update_json.startswith("```json") and design_update_json.endswith("```"):
-                # Strip off the Markdown code block delimeters
-                design_update_json = design_update_json[7:-3].strip()
+            modification_instructions_html = (
+                f"Given the extracted modifications: {extracted_modifications}, revise the HTML code to incorporate "
+                f"the changes specified for HTML only. They would be under 'HTML_Task'. Ensure the modifications allow"
+                f" for CSS styling, including adding necessary classes or IDs for sections requiring style adjustments."
+                f" Maintain HTML5 standards for enhanced accessibility and web practices. If there are no tasks "
+                f"specified for HTML modification, return the original HTML code given."
+            )
 
-            try:
-                # Then start modification
-                """Loading Frontend - Begin"""
-                design_update = json.loads(design_update_json)
-                print(f"Design update tasks: {design_update}")  # debug
+            updated_html = template_bot.modify_html(page_html, modification_instructions_html)
+            print(f"updated html: {updated_html}")
 
-                # Check if HTML changes are requested
-                if design_update.get("html_change_request"):
-                    # If the list is not empty, process HTML changes
-                    modification_instructions_html = (
-                        f"Refine the HTML for this portfolio page by incorporating the following changes"
-                        f" requested by the user: {design_update['html_change_request']}. "
-                        f"Ensure these modifications blend seamlessly with the existing "
-                        f"content and layout, maintaining the page's overall aesthetics and "
-                        f"functionality. Focus on enhancing user engagement and accessibility "
-                        f"with the new content."
-                    )
+            # Update the modified template in the database
+            DBUtils.update_template_in_db(user_template_id, page_name, updated_html, 'html')
 
-                    updated_html = template_bot.modify_html(page_html, modification_instructions_html)
-                    # Update the modified template in the database
-                    DBUtils.update_template_in_db(user_template_id, page_name, updated_html, 'html')
-                    print(f"updated_html: {updated_html}")  # Debug
-                else:
-                    print("No HTML changes requested. Skipping to CSS modifications.")
+            # Retrieve the metadata of the html webpage to give css AI context
+            metadata = template_bot.get_metadata(updated_html)
 
-                # Then do css
-                modification_instructions_css = (
-                    f"Update the CSS for this portfolio page to implement the following style modifications"
-                    f" as requested by the user: {design_update['css_change_request']}. "
-                    f"Apply these changes in a way that enhances the visual appeal and user "
-                    f"experience of the website while ensuring consistency with the existing "
-                    f"design theme. Prioritize responsive design and accessibility in these "
-                    f"updates."
-                )
+            modification_instructions_css = (
+                f"Given the newly modified HTML structure: {metadata} and the extracted modifications: "
+                f"{extracted_modifications} revise the CSS code to incorporate the changes for CSS only."
+                f"They would be under 'CSS_Task'. Make use of the IDs and classes in the HTML's metadata structure."
+                f" Ensure the CSS enhances the page's visual appeal and user interaction, adhering to modern web design"
+                f" principles. If there are no changes required for CSS just return the original CSS."
+            )
 
-                updated_css = template_bot.modify_css(page_css, modification_instructions_css)
-                # Update the modified template in the database
-                DBUtils.update_template_in_db(user_template_id, page_name, updated_css, 'css')
-                print(f"updated_css: {updated_css}")  # Debug
+            updated_css = template_bot.modify_css(page_css, modification_instructions_css)
 
-                # Refresh iframe
-                socketio.emit('refresh_iframe')  # Finsh loading
+            # Update the modified template in the database
+            DBUtils.update_template_in_db(user_template_id, page_name, updated_css, 'css')
+            print(f"updated_css: {updated_css}")  # Debug
 
-                # Stop loading
-                socketio.emit('hide_loading', {'message': 'Customization complete'}, namespace='/')
+            # Refresh iframe
+            socketio.emit('refresh_iframe')  # Finsh loading
 
-                state_manager.set_current_step("finalize_interaction")
-                return self.process(state_manager)
+            # Stop loading
+            socketio.emit('hide_loading', {'message': 'Customization complete'}, namespace='/')
 
-            except json.JSONDecodeError as e:
-                print(f"Failed to parse JSON: {e}")
+            state_manager.set_current_step("finalize")
+
+            return self.finalize_interaction(state_manager)
 
     def finalize_interaction(self, state_manager):
+        # Reset current step to None indicating the end of this node's process
+        state_manager.set_current_step(None)
         message = ("I have carried out the modifications you requested. The conversation will end here. Click on the"
                    " 'Next' button at the bottom right to customize this template in the dashboard.")
         response_type = None
-        next_node = self.next_node
-        auto_progress = True
 
-        return {'message': message, 'response_type': response_type, 'next_node': next_node,
-                'auto_progress': auto_progress}
+        return {'message': message, 'response_type': response_type}
 
 
 class FinalMessage(Node):

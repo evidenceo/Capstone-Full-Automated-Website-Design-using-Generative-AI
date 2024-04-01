@@ -96,14 +96,17 @@ function enableInput() {
 
 
 function displayChoices(buttons) {
+    // Clear buttons before displaying new ones
+    clearButtons();
+
     buttons.forEach(button => {
         const buttonElement = document.createElement('button');
         buttonElement.textContent = button.name;
         buttonElement.className = 'chat-button';
+        buttonElement.setAttribute('data-active', 'true'); // Mark as active button
         buttonElement.onclick = () => {
             appendMessage({ text: button.name, sender: 'user' }); // Display button text as user message
             sendMessage(button.value); // Send the button's value to the backend
-            clearButtons();
         };
         document.getElementById('chatHistory').appendChild(buttonElement);
     });
@@ -161,9 +164,10 @@ function displayPopup(message, buttons) {
  }
 
 function clearButtons() {
-    document.querySelectorAll('.chat-button').forEach(button => button.remove());
+    document.querySelectorAll('.chat-button[data-active="true"]').forEach(button => {
+        button.remove();
+    });
 }
-
 
 ///////////////////////////////////////////////////////////////////
 //IFRAME JS
