@@ -1,0 +1,97 @@
+<!--This is a html home page template for a minimalistic ecommerce website-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>minimalist ecommerce template </title>
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Dynamically link custom css link -->
+    <link rel="stylesheet" href="/template_preview/css/{{user_template_id}}/{{page_name}}">
+
+</head>
+<body>
+<!-- in this section find the header including: logo, nav bar and icons -->
+    <header>
+        <input type="checkbox" name="" id="toggler">
+        <label for="toggler" class="fas fa-bars"></label>
+
+
+        <a href="#" class="logo">{{ website_name }}<span>.</span></a>
+    <!--helps to identify the website being visited-->
+
+        <nav class="navbar">
+            <!--navigation bar containing links to different pages-->
+             <ul>
+                <!--conversation flow referencing-->
+                <li><a href="#" onclick="navigateTo('Home')">Home</a></li>
+                <li><a href="#" onclick="navigateTo('About')">About Us</a></li>
+                <li><a href="#" onclick="navigateTo('Products')">Products</a></li>
+                <li><a href="#" onclick="navigateTo('Contact')">Contact Us</a></li>
+
+            </ul>
+        </nav>
+        <!--section for website icons -->
+        <div class="icons">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="#" class="fas fa-shopping-cart"></a>
+            <a href="#" class="fas fa-user"></a>
+        </div>
+    </header>
+<!-- End of the header -->
+    <main>
+    <!-- Home Page section starts  -->
+        <section class="Home" id="Home">
+            <!-- Adding in the home content -->
+            <div class="home_content">
+                <h3>Fresh Flowers</h3>
+                <span> Amazing flowers</span>
+                <p>The origin of flowers traces back to over 125 million years ago, during the Cretaceous period. These early blooms, known as angiosperms.</p>
+                <a href="#" class="btn">shop now</a>
+            </div>
+        </section>
+
+    <!-- Home Page section ends  -->
+ <!--Footer section starts-->
+ <section class="footer">
+    <div class="box-container">
+        <div class="box">
+            <h3>quick links</h3>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Products</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <div class="box">
+            <h3>extra links</h3>
+            <a href="#">my account</a>
+            <a href="#">my order</a>
+            <a href="#">my favorite</a>
+        </div>
+
+        <div class="box">
+            <h3>locations</h3>
+            <a href="#">Kenya</a>
+            <a href="#">Canada </a>
+            <a href="#">Nigeria</a>
+        </div>
+
+        <div class="box">
+            <h3>contact info</h3>
+            <a href="#">+1 905 655 7620</a>
+            <a href="#">emailid@gmail.com </a>
+            <a href="#">Oshawa, ON</a>
+        </div>
+
+    </div>
+</section>
+<!--Footer section ends-->
+
+<!-- Dynamically link to the JS file -->
+<script src="/template_preview/js/{{user_template_id}}/{{page_name}}"></script>
+    </main>
+</body>
+</html>
+

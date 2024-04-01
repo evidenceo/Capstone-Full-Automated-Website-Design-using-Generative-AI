@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design -->
+    <title>Modern Ecommerce Template</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+        <!-- Dynamically link custom css link -->
+    <link rel="stylesheet" type="text/css" href="/template_files/ecommerce/color-two/css/main_styles.css">
+</head>
+<body>
+    <!-- in this section find the header including: logo, nav bar and icons -->
+    <header>
+        <a href="#" class="logo">{{ website_name }}<span>.</span></a> <!-- Move the logo outside of the nav container -->
+        <input type="checkbox" id="toggler">
+        <label for="toggler" class="fas fa-bars"></label>
+    <!--navigation bar containing links to different pages-->
+        <nav class="navbar">
+            <ul>
+                 <!--conversation flow referencing-->
+                <li><a href="#" onclick="navigateTo('Home')">Home</a></li>
+                <li><a href="#" onclick="navigateTo('About')">About Us</a></li>
+                <li><a href="#" onclick="navigateTo('Products')">Products</a></li>
+                <li><a href="#" onclick="navigateTo('Contact')">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <!-- End of the header -->
+
+    <main>
+       <!-- Contact section starts -->
+<section class="Contact" id="Contact">
+    <div class="heading">
+        <h1>Contact</h1>
+        <h2>Us</h2>
+    </div>
+
+    <div class="row">
+        <form action="">
+            <input type="text" placeholder="Name" class="box">
+            <input type="email" placeholder="Email" class="box">
+            <input type="number" placeholder="Number" class="box">
+            <textarea name="" placeholder="Message" class="box" id="" cols="30" rows="10"></textarea>
+            <input type="submit" value="Send Message" class="btn">
+        </form>
+    </div>
+</section>
+<!-- Contact section ends -->
+</main>
+
+<!--Footer section starts-->
+<section class="footer">
+    <div class="box-container">
+        <div class="box">
+            <h3>quick links</h3>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Products</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <div class="box">
+            <h3>extra links</h3>
+            <a href="#">my account</a>
+            <a href="#">my order</a>
+            <a href="#">my favorite</a>
+        </div>
+
+        <div class="box">
+            <h3>locations</h3>
+            <a href="#">Kenya</a>
+            <a href="#">Canada </a>
+            <a href="#">Nigeria</a>
+        </div>
+
+        <div class="box">
+            <h3>contact info</h3>
+            <a href="#">+1 905 655 7620</a>
+            <a href="#">emailid@gmail.com </a>
+            <a href="#">Oshawa, ON</a>
+        </div>
+
+    </div>
+</section>
+<!--Footer section ends-->
+
+<!-- Dynamically link to the JS file -->
+<script src="/template_preview/js/{{user_template_id}}/{{page_name}}"></script>
+</body>
+</html>

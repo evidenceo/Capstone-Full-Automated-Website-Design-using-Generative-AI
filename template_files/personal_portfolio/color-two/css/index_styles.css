@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+:root{
+    --grape:#6F2DBD;
+}
+
+*{
+    margin:0; padding:0;
+    box-sizing: border-box;
+    font-family: 'Cormorant Garamond', serif ;/* Use a modern sans-serif font */
+    outline: none; border:none;
+    text-decoration:none;
+    text-transform: capitalize;
+    transition: .2s linear;
+    background-color: #f9fcff;
+    background-image: linear-gradient(147deg, #f9fcff 0%, #dee4ea 74%);
+}
+
+html{
+    font-size: 62.5%; /* Use 62.5% for easier rem calculations */
+    scroll-behaviour: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: hidden;
+}
+
+section{
+    padding:2rem 9%;
+}
+
+.heading{
+  text-align:center;
+  font-size:3rem;
+  /* color: #fff;; */
+  padding:1rem;
+  margin:2rem;
+}
+
+.heading span{
+  color:var(--grape);
+}
+
+.btn{
+  display:inline-block;
+  margin-top: 1rem;
+  border-radius:5rem;
+  background:#333;
+  color:#fff;
+  padding:.9rem 3.5rem;
+  cursor: pointer;
+  font-size: 1.7rem;
+}
+
+.btn:hover{
+  background: var(--grape);
+}
+
+header{
+    display: flex;
+    flex-direction: column; /* Stack the elements vertically */
+    align-items: center; /* Center the elements horizontally */
+    justify-content: center; /* Center the elements vertically */
+    padding: 2rem 0; /* Add some vertical padding */
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+}
+
+header .logo {
+    font-size: 2rem;
+    color: #0A0A0A;
+    font-weight: bolder;
+    margin-bottom: 1rem; /* Add some space below the logo */
+}
+
+header .logo span{
+   color:var(--grape);
+}
+
+nav{
+    border-top: 1px solid #333; /* Add a line at the top */
+    border-bottom: 1px solid #333; /* Add a line at the bottom */
+    width: 100%; /* Make the navbar span the full width of the header */
+    padding: 1rem 0; /* Add some vertical padding */
+}
+
+nav ul {
+    display: flex; /* Display the nav items in a line */
+    justify-content: space-around; /* Distribute the nav items evenly across the navbar */
+    width: 100%; /* Make the ul span the full width of the navbar */
+}
+
+nav ul li {
+    display: inline-block; /* Display the nav items in a line */
+    margin-right: 1rem; /* Add some spacing between the items */
+}
+
+nav ul li a {
+    font-size: 1.6rem; /* Slightly larger font size */
+    text-decoration: none;
+    color: #0A0A0A;
+}
+
+nav ul li a:hover {
+    color: var(--grape);
+}
+
+header .icons a {
+    font-size: 2rem; /* Larger icon size */
+    color: #333;
+    margin-left: 1.5rem;
+}
+
+header .icons a:hover {
+    color: var(--grape);
+}
+
+header #toggler {
+    display: none;
+}
+
+header .fa-bars {
+    font-size: 3rem;
+    color: #333;
+    border-radius: .5rem;
+    padding: 0.5rem 1.5rem; /* Corrected padding values */
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,.3); /* Corrected border value */
+    display: none;
+}
+
+.Home {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    /* background-color: #f9fcff;
+    background-image: linear-gradient(147deg, #f9fcff 0%, #dee4ea 74%); */
+    /* background-size: cover;
+    background-position: center; */
+
+}
+
+.Home .home_content {
+    max-width: 60rem; /* Slightly larger max width */
+}
+
+.Home .home_content h1 { /* Changed h3 to h1 for better SEO */
+    font-size: 5rem;
+    color: #0A0A0A;
+}
+
+.Home .home_content span {
+    font-size: 2.5rem;
+    color: var(--grape);
+    padding: 1rem 0;
+    line-height: 1.5;
+}
+
+.Home .home_content p {
+    font-size: 1.8rem;
+    color: #0A0A0A;
+    padding: 1rem 0;
+    line-height: 1.5;
+}
+
+/* About Section */
+.about {
+    background-color: #fff;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.about .about_content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.about .about_content h2 {
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    color: #333;
+    font-weight: 600;
+}
+
+.about .about_content p {
+    font-size: 1.6rem;
+    padding: 1rem 0;
+    line-height: 1.6;
+    color: #555;
+}
+
+
+/* Portfolio section starts */
+.portfolio {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 5rem;
+    background-color: #f8f8f8;
+    margin: 2rem 0;
+}
+
+.portfolio .post_content {
+    flex: 1 0 21%; /* This will create four posts per row */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem; /* Add some margin around each post */
+    transition: transform 0.3s ease;
+
+}
+
+.post_content:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.portfolio .post_content .portfolio_image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+
+}
+
+.portfolio .post_content h3 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.portfolio .post_content p {
+    font-size: 1.2rem;
+    color: #777;
+    margin-bottom: 1rem;
+}
+
+/* Portfolio section ends */
+
+/* Resume Section */
+#resume {
+    background-color: #fff;
+    padding: 80px 0;
+    text-align: center;
+}
+
+#resume h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#resume p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* Contact Section */
+#contact {
+    background-color: #333;
+    padding: 80px 0;
+    text-align: center;
+}
+
+#contact h2 {
+    text-emphasis-color: #fff;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+#contact p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #fff;
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-weight: 600;
+}
+
+.btn:hover {
+    background-color: #555;
+}
+
+/* Footer */
+footer {
+    padding: 20px 0;
+    color: #0A0A0A; /* Set the text color to white */
+    text-align: center;
+}
+
+

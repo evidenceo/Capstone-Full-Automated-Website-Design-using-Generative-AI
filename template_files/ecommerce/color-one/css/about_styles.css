@@ -1,0 +1,243 @@
+:root{
+    /* --pink:#FAD1C6 */
+    --pink:#D44D5C
+}
+
+*{
+    margin:0; padding:0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    outline: none; border:none;
+    text-decoration:none;
+    text-transform: capitalize;
+    transition: .2s linear;
+}
+
+html{
+    font-size: 65%;
+    scroll-behaviour: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: hidden;
+}
+section{
+    padding:2rem 9%;
+}
+
+.heading{
+  text-align:center;
+  font-size:2rem;
+  color:#333;
+  padding:0.5rem;
+  margin:2rem;
+  background: #F5E9E2;
+}
+
+.heading span{
+  color:var(--pink);
+
+}
+.btn{
+  display:inline-block;
+  margin-top: 1rem;
+  border-radius:5rem;
+  background:#333;
+  color:#fff;
+  padding:.9rem 3.5rem;
+  cursor: pointer;
+  font-size: 1.7rem;
+}
+
+.btn:hover{
+  background: var(--pink);
+}
+header{
+    position: fixed;
+    top: 0; left:0; right:0;
+    background:#f5e9e2;
+    padding: 2rem 9%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+    padding-bottom: 20px; /* Adjust as needed */
+
+}
+
+header .logo {
+   font-size: 2rem;
+   color:#333;
+   font-weight: bolder;
+}
+
+header .logo span{
+   color:var(--pink);
+}
+nav ul {
+    list-style: none;
+    padding: 0 1.5rem;
+    }
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+nav ul li a {
+     font-size: 1.5rem;
+     text-decoration: none;
+     color: #666; /* Link color */
+}
+nav ul li a:hover {
+    color:var(--pink);
+}
+
+header .icons a{
+    font-size: 1.5rem;
+    color:#333;
+    margin-left: 1.5rem;
+}
+
+header .icons a:hover{
+     color:var(--pink);
+}
+
+header #toggler{
+    display: none;
+}
+
+header .fa-bars{
+    font-size: 3rem;
+    color: #333;
+    border-radius: .5rem;
+    padding:5rem i.5rem;
+    cursor: pointer;
+    border:1m solid rgba(0,0,0,.3);
+    display: none;
+}
+.About{
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 80px; /* Adjust as needed */
+
+}
+.About .row{
+    display: flex;
+    align-items: center;
+    gap:2rem;
+    flex-wrap:wrap;
+    padding: 2rem 0;
+    padding-bottom: 3rem;
+  }
+
+  .About .row .about-container{
+    flex:1 1 40rem;
+    position:relative;
+  }
+
+  .About .row .about-container img{
+    width:100%;
+    border:1.5rem solid #fff;
+    border-radius: .5rem;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+  }
+
+  .About .row .about-container h3{
+    position:absolute;
+    top:50%; transform: translateY(-50%);
+    font-size: 3rem;
+    color:#333;
+    background:#fff;
+  }
+
+  .About .row .content{
+    flex:1 1 40rem;
+  }
+
+  .About .row .content h3{
+    font-size: 3rem;
+    color:#333;
+  }
+
+  .About .row .content p{
+    font-size: 1.5rem;
+    color:#999;
+    padding:.5rem 0;
+    padding-top: 1rem;
+    line-height: 1.5;
+
+  }
+
+  .icons-container{
+    background:#F5E9E2;
+    display:flex;
+    flex-wrap:wrap;
+    gap: 1.5em;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+
+  }
+
+  .icons-container .icons{
+    background:#fff;
+    border: .1rem solid rgba(0, 0, 0, .1);
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    flex: 1 1 25rem;
+
+  }
+  .icons-container .icons img{
+    height: 5rem;
+    margin-right: 2rem;
+  }
+
+  .icons-container .icons h3{
+    color:#333;
+    padding-bottom: .5rem;
+    font-size: 1.5rem;
+  }
+
+  .icons-container .icons span{
+    color:#d44d5c;
+    font-size: 1.3rem;
+  }
+  .footer {
+    background-color: #773344;
+    color: #fff;
+    padding: 2rem 0;
+  }
+
+  .footer .box-container{
+    display:flex;
+    flex-wrap: wrap;
+    gap:1.5rem;
+    justify-content: space-between; /* Distribute boxes evenly across the footer */
+    max-width: 1200px; /* Limit the width of the container */
+    margin: 0 auto; /* Center the container */
+    padding: 0 1rem; /* Add some horizontal padding */
+  }
+
+  .footer .box-container .box{
+    flex:1 1 25rem;
+    margin-bottom: 1.5rem; /* Add some vertical margin to the boxes */
+
+  }
+
+  .footer .box-container .box h3{
+    color: #fff;
+    font-size: 1.5rem;
+    padding:1rem 0;
+  }
+
+  .footer .box-container .box a{
+    display: block;
+    color: #fff;
+    font-size: 1.3rem;
+    padding: 0.5rem 0;
+    transition: color 0.3s ease;
+  }
+
+  .footer .box-container .box a:hover{
+    color:#ddd;
+    text-decoration: none;
+  }
